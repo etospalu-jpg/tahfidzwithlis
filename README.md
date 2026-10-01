@@ -7,37 +7,37 @@ Platform full-stack untuk monitoring tahfidz: siswa, setoran, murajaah, target, 
 - Next.js + TypeScript
 - Vercel
 - Neon PostgreSQL
-- Neon Managed Better Auth
+- PIN-based admin access with signed httpOnly session
 - Tailwind CSS
 - PWA shell
 
 ## Environment
 
-Buat environment variables berikut di runtime/deployment:
+Deployment minimal hanya membutuhkan:
 
 ```bash
 DATABASE_URL=...
-NEON_AUTH_BASE_URL=...
-NEON_AUTH_COOKIE_SECRET=...
 ```
 
-Jangan commit nilai secret ke repository.
+Opsional:
+
+```bash
+ADMIN_SESSION_SECRET=...
+```
+
+Jika `ADMIN_SESSION_SECRET` tidak diisi, server memakai `DATABASE_URL` sebagai sumber secret untuk penandatanganan session cookie.
+
+PIN admin tidak disimpan sebagai plaintext di repository. Hash PIN tersimpan di Neon pada `app_settings.admin_pin_hash`.
 
 ## Core routes
 
-- `/auth/sign-in`
-- `/auth/sign-up` — hanya untuk bootstrap akun pertama
-- `/setup` — finalisasi Super Admin pertama
+- `/auth/sign-in` — akses admin dengan PIN
 - `/dashboard`
 - `/students`
 - `/students/[id]`
 - `/setoran`
 - `/reports`
 - `/settings`
-
-## Access model
-
-Akun pertama menyelesaikan setup sebagai `super_admin`. Pembuatan akun lanjutan akan dikelola dari admin workspace pada fase berikutnya.
 
 ## Development
 
