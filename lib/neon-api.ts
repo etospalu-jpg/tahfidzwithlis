@@ -3,9 +3,7 @@ import { createClient } from '@neondatabase/neon-js';
 const NEON_DATABASE_URL = 'https://ep-divine-fire-b52hjjer.c-7.us-east-2.aws.neon.tech/neondb';
 
 const client = createClient(NEON_DATABASE_URL, {
-  auth: {
-    allowAnonymous: true,
-  },
+  auth: { allowAnonymous: true },
 });
 
 export async function neonRpc<T = unknown>(
@@ -13,10 +11,15 @@ export async function neonRpc<T = unknown>(
   args: Record<string, unknown>
 ): Promise<T> {
   const { data, error } = await client.rpc(fn, args);
-  if (error) {
-    throw new Error(error.message || `Neon RPC failed: ${fn}`);
-  }
+  if (error) throw new Error(error.message || `Neon RPC failed: ${fn}`);
   return data as T;
+}
+
+function normalizeJson<T>(raw: unknown): T {
+  if (typeof raw === 'string') {
+    return JSON.parse(raw) as T;
+  }
+  return raw as T;
 }
 
 export async function loginWithPin(pin: string) {
@@ -30,43 +33,6 @@ export async function validateAdminToken(token: string) {
 export async function logoutAdminToken(token: string) {
   return neonRpc<boolean>('admin_logout', { p_token: token });
 }
-
-export async function adminQuery(
-  token: string,
-  query: string,
-  params: unknown[]
-) {
-  const raw = await neonRpc<unknown>('admin_query_text', {
-    p_token: token,
-    p_sql: query,
-    p_params: params,
-  });
-
-  if (Array.isArray(raw)) return raw;
-
-  if (typeof raw === 'string') {
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : parsed == null ? [] : [parsed];
-  }
-
-  if (raw && typeof raw === 'object') {
-    const value =
-      (raw as any).admin_query_text ??
-      (raw as any).result ??
-      (raw as any).data;
-
-    if (typeof value === 'string') {
-      const parsed = JSON.parse(value);
-      return Array.isArray(parsed) ? parsed : parsed == null ? [] : [parsed];
-    }
-
-    if (Array.isArray(value)) return value;
-    return [raw];
-  }
-
-  return [];
-}
-
 
 export type AdminProfile = {
   organization_id: string;
@@ -87,10 +53,90 @@ export type DashboardData = {
   groups: any[];
 };
 
+export type ManageData = {
+  teachers: any[];
+  classes: any[];
+  groups: any[];
+  students: any[];
+};
+
+export type StudentDetailData = {
+  student: any;
+  sessions: any[];
+  target: any;
+  notes: any[];
+};
+
+export type StudentEditData = {
+  student: any;
+  classes: any[];
+  groups: any[];
+};
+
 export async function getAdminProfile(token: string) {
-  return neonRpc<AdminProfile | null>('admin_profile', { p_token: token });
+  return normalizeJson<AdminProfile | null>(
+    await neonRpc<unknown>('admin_profile', { p_token: token })
+  );
 }
 
 export async function getDashboardData(token: string) {
-  return neonRpc<DashboardData>('dashboard_data', { p_token: token });
+  return normalizeJson<DashboardData>(
+    await neonRpc<unknown>('dashboard_data', { p_token: token })
+  );
+}
+
+export async function getStudentsList(token: string, term = '') {
+  return normalizeJson<any[]>(
+    await neonRpc<unknown>('students_list', { p_token: token, p_term: term })
+  ) || [];
+}
+
+export async function getStudentDetail(token: string, studentId: string) {
+  return normalizeJson<StudentDetailData | null>(
+    await neonRpc<unknown>('student_detail', {
+      p_token: token,
+      p_student_id: studentId,
+    })
+  );
+}
+
+export async function getReportsData(token: string) {
+  return normalizeJson<any>(
+    await neonRpc<unknown>('reports_data', { p_token: token })
+  );
+}
+
+export async function getSetoranFormData(token: string) {
+  return normalizeJson<any[]>(
+    await neonRpc<unknown>('setoran_form_data', { p_token: token })
+  ) || [];
+}
+
+export async function getManageData(token: string) {
+  return normalizeJson<ManageData>(
+    await neonRpc<unknown>('manage_data', { p_token: token })
+  );
+}
+
+export async function getStudentEditData(token: string, studentId: string) {
+  return normalizeJson<StudentEditData | null>(
+    await neonRpc<unknown>('student_edit_data', {
+      p_token: token,
+      p_student_id: studentId,
+    })
+  );
+}
+
+export async function adminMutate(
+  token: string,
+  action: string,
+  payload: Record<string, unknown>
+) {
+  return normalizeJson<any>(
+    await neonRpc<unknown>('admin_mutate', {
+      p_token: token,
+      p_action: action,
+      p_payload: payload,
+    })
+  );
 }
