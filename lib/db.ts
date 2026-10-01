@@ -1,7 +1,18 @@
-import { neon } from '@neondatabase/serverless';
+import { getAdminToken } from '@/lib/admin-session';
+import { adminQuery } from '@/lib/neon-api';
 
-if (!process.env.DATABASE_URL) {
-  throw new Error('DATABASE_URL is not configured');
+export async function sql(
+  strings: TemplateStringsArray,
+  ...values: unknown[]
+): Promise<any[]> {
+  const token = await getAdminToken();
+  if (!token) throw new Error('Admin session is required');
+
+  let query = strings[0] || '';
+  for (let i = 0; i < values.length; i++) {
+    query += `$${i + 1}${strings[i + 1] || ''}`;
+  }
+
+  const result = await adminQuery(token, query, values);
+  return Array.isArray(result) ? result : [];
 }
-
-export const sql = neon(process.env.DATABASE_URL);
