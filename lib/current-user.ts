@@ -1,19 +1,24 @@
-import { auth } from '@/lib/auth/server';
 import { sql } from '@/lib/db';
-import { redirect } from 'next/navigation';
+import { requireAdminSession } from '@/lib/admin-session';
 
 export async function getCurrentProfile() {
-  const { data: session } = await auth.getSession();
-  if (!session?.user) redirect('/auth/sign-in');
+  await requireAdminSession();
 
   const rows = await sql`
-    select up.*, o.name as institution_name
-    from user_profiles up
-    join organizations o on o.id=up.organization_id
-    where up.auth_user_id=\${session.user.id}
+    select id as organization_id, name as institution_name
+    from organizations
+    order by created_at asc
     limit 1
   `;
 
-  if (!rows.length) redirect('/setup');
-  return { session, profile: rows[0] };
+  if (!rows.length) throw new Error('Organization is not configured');
+
+  return {
+    profile: {
+      organization_id: rows[0].organization_id,
+      institution_name: rows[0].institution_name,
+      full_name: 'Administrator',
+      role: 'admin',
+    },
+  };
 }
