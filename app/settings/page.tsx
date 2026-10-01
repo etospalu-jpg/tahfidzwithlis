@@ -1,5 +1,5 @@
 import { AppShell } from '@/components/app-shell';
-import { getCurrentProfile } from '@/lib/current-user';
+import { getPageData } from '@/lib/page-data';
 import { ChangePinForm } from '@/components/change-pin-form';
 import {
   ShieldCheck,
@@ -12,7 +12,7 @@ import {
 export const dynamic='force-dynamic';
 
 export default async function SettingsPage(){
-  const {profile}=await getCurrentProfile();
+  const { profile } = await getPageData<Record<string, never>>('settings');
 
   return (
     <AppShell userName={profile.full_name} role={profile.role} institution={profile.institution_name}>
