@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@neondatabase/auth": "latest",
     "@neondatabase/serverless": "latest",
     "lucide-react": "latest",
     "next": "latest",
