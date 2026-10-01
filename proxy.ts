@@ -1,8 +1,14 @@
-import { auth } from '@/lib/auth/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export default auth.middleware({
-  loginUrl: '/auth/sign-in',
-});
+export function proxy(request: NextRequest) {
+  if (!request.cookies.get('tahfidz_admin_session')) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/auth/sign-in';
+    return NextResponse.redirect(url);
+  }
+
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: [
@@ -11,6 +17,5 @@ export const config = {
     '/setoran/:path*',
     '/reports/:path*',
     '/settings/:path*',
-    '/setup/:path*'
   ],
 };
