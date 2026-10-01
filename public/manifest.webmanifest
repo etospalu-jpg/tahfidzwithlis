@@ -1,0 +1,12 @@
+{
+  "name": "TahfidzWithLis",
+  "short_name": "Tahfidz",
+  "description": "Monitoring hafalan, setoran, murajaah, dan perkembangan siswa.",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#F5F3EC",
+  "theme_color": "#12372A",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
