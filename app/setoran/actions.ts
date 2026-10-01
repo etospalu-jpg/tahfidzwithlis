@@ -2,7 +2,6 @@
 
 import { getAdminToken } from '@/lib/admin-session';
 import { adminMutate } from '@/lib/neon-api';
-import { getCurrentProfile } from '@/lib/current-user';
 import { redirect } from 'next/navigation';
 
 function score(formData: FormData, key: string) {
@@ -14,9 +13,8 @@ function score(formData: FormData, key: string) {
 }
 
 export async function saveSetoranAction(formData: FormData) {
-  await getCurrentProfile();
   const token = await getAdminToken();
-  if (!token) throw new Error('Admin session is required');
+  if (!token) redirect('/auth/sign-in');
 
   const studentId = String(formData.get('student_id') || '');
   const sessionType = String(formData.get('session_type') || 'new');
