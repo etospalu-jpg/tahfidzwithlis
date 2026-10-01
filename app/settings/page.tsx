@@ -14,7 +14,7 @@ export default async function SettingsPage(){
       <div className="grid lg:grid-cols-3 gap-4 mt-8">
         <Box icon={Palette} title="Identitas lembaga" body="Nama lembaga, logo, warna, dan identitas raport."/>
         <Box icon={ShieldCheck} title="Akses & role" body="Super Admin, koordinator, guru, orang tua, dan siswa."/>
-        <Box icon={Database} title="Neon Backend" body="PostgreSQL + Managed Auth aktif pada branch production."/>
+        <Box icon={Database} title="Neon Backend" body="PostgreSQL Neon aktif. Akses admin sementara menggunakan PIN terenkripsi."/>
       </div>
     </div>
   </AppShell>
