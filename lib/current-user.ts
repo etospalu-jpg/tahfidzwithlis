@@ -1,24 +1,14 @@
-import { sql } from '@/lib/db';
-import { requireAdminSession } from '@/lib/admin-session';
+import { requireAdminSession, getAdminToken } from '@/lib/admin-session';
+import { getAdminProfile } from '@/lib/neon-api';
 
 export async function getCurrentProfile() {
   await requireAdminSession();
 
-  const rows = await sql`
-    select id as organization_id, name as institution_name
-    from organizations
-    order by created_at asc
-    limit 1
-  `;
+  const token = await getAdminToken();
+  if (!token) throw new Error('Admin session is required');
 
-  if (!rows.length) throw new Error('Organization is not configured');
+  const profile = await getAdminProfile(token);
+  if (!profile) throw new Error('Organization is not configured');
 
-  return {
-    profile: {
-      organization_id: rows[0].organization_id,
-      institution_name: rows[0].institution_name,
-      full_name: 'Administrator',
-      role: 'admin',
-    },
-  };
+  return { profile };
 }
