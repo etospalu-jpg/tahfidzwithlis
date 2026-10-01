@@ -53,7 +53,7 @@ export function DesktopAppNav(){
 export function MobileAppNav(){
   const pathname = usePathname();
   return (
-    <div className="grid grid-cols-5 rounded-[22px] border border-white/10 bg-[#12372A]/[.97] backdrop-blur-xl px-1.5 py-1.5 shadow-[0_18px_45px_rgba(18,55,42,.24)]">
+    <div className="grid grid-cols-5 rounded-[22px] border border-white/10 bg-[#12372A] px-1.5 py-1.5 shadow-[0_14px_36px_rgba(18,55,42,.22)]">
       {items.map(({href,label,icon:Icon}) => {
         const isActive = active(pathname, href);
         return (
