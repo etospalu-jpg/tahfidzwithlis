@@ -33,7 +33,6 @@ export function DesktopAppNav(){
             key={href}
             href={href}
             prefetch={false}
-            prefetch={false}
             aria-current={isActive ? 'page' : undefined}
             className={
               "flex items-center gap-3 rounded-[15px] px-3.5 py-3 text-sm font-bold transition " +
@@ -61,7 +60,6 @@ export function MobileAppNav(){
           <Link
             key={href}
             href={href}
-            prefetch={false}
             prefetch={false}
             aria-current={isActive ? 'page' : undefined}
             className={
