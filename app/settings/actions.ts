@@ -2,7 +2,6 @@
 
 import { getAdminToken } from '@/lib/admin-session';
 import { changeAdminPin } from '@/lib/neon-api';
-import { getCurrentProfile } from '@/lib/current-user';
 
 export type PinState = {
   error?: string;
@@ -13,8 +12,6 @@ export async function changePinAction(
   _prev: PinState | null,
   formData: FormData
 ): Promise<PinState> {
-  await getCurrentProfile();
-
   const token = await getAdminToken();
   if (!token) return { error: 'Sesi admin tidak tersedia.' };
 
