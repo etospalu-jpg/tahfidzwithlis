@@ -1,8 +1,7 @@
 import Link from 'next/link';
 import { AppShell } from '@/components/app-shell';
-import { getCurrentProfile } from '@/lib/current-user';
-import { getAdminToken } from '@/lib/admin-session';
-import { getDashboardData } from '@/lib/neon-api';
+import { getPageData } from '@/lib/page-data';
+import type { DashboardData } from '@/lib/neon-api';
 import {
   ArrowUpRight,
   BookOpen,
@@ -17,11 +16,7 @@ import {
 export const dynamic = 'force-dynamic';
 
 export default async function DashboardPage() {
-  const { profile } = await getCurrentProfile();
-  const token = await getAdminToken();
-  if (!token) throw new Error('Admin session is required');
-
-  const dashboard = await getDashboardData(token);
+  const { profile, data: dashboard } = await getPageData<DashboardData>('dashboard');
   const s:any = dashboard.summary;
   const focus = dashboard.focus || [];
   const recent = dashboard.recent || [];
