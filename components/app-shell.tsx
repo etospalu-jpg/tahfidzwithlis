@@ -70,7 +70,7 @@ export function AppShell({ children, userName, role, institution }: Props) {
       <main className="lg:pl-[268px] mobile-safe-bottom lg:pb-6">
         <header className="sticky top-0 z-30 px-3 sm:px-5 lg:px-6 pt-3 lg:pt-4">
           <div className="page-shell">
-            <div className="min-h-[58px] flex items-center justify-between gap-3 rounded-[20px] border border-white/80 bg-[#f5f3ec]/88 backdrop-blur-xl px-2.5 sm:px-3 shadow-[0_8px_26px_rgba(28,46,37,.035)]">
+            <div className="min-h-[58px] flex items-center justify-between gap-3 rounded-[20px] border border-white/80 bg-[#f5f3ec]/96 sm:bg-[#f5f3ec]/88 sm:backdrop-blur-xl px-2.5 sm:px-3 shadow-[0_8px_26px_rgba(28,46,37,.035)]">
               <Link href="/dashboard" className="lg:hidden flex min-w-0 items-center gap-2.5">
                 <div className="h-10 w-10 shrink-0 rounded-[13px] bg-[#12372A] text-white grid place-items-center">
                   <BookOpenCheck size={20}/>
@@ -111,12 +111,13 @@ export function AppShell({ children, userName, role, institution }: Props) {
 
                 <Link
                   href="/settings"
-                  className="h-10 items-center gap-2 rounded-[13px] bg-white border border-[#12372A]/[.08] px-3 hidden sm:flex"
+                  className="h-10 w-10 sm:w-auto flex items-center justify-center sm:justify-start gap-2 rounded-[13px] bg-white border border-[#12372A]/[.08] sm:px-3"
+                  aria-label="Pengaturan akun"
                 >
                   <div className="h-6 w-6 rounded-[9px] bg-[#edf2ee] text-[#12372A] grid place-items-center">
                     <UserRound size={14}/>
                   </div>
-                  <span className="text-xs font-extrabold">{firstName}</span>
+                  <span className="hidden sm:inline text-xs font-extrabold">{firstName}</span>
                 </Link>
               </div>
             </div>
