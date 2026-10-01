@@ -17,5 +17,6 @@ export const config = {
     '/setoran/:path*',
     '/reports/:path*',
     '/settings/:path*',
+    '/manage/:path*',
   ],
 };
