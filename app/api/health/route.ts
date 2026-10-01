@@ -5,12 +5,16 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    await neonRpc<boolean>('admin_validate', { p_token: '' });
+    const raw = await neonRpc<unknown>('transport_probe', {});
     return NextResponse.json({
       ok: true,
       database: 'reachable',
       auth: 'pin',
       service: 'TahfidzWithLis',
+      transport: {
+        type: Array.isArray(raw) ? 'array' : typeof raw,
+        raw,
+      },
     });
   } catch (error) {
     return NextResponse.json(
