@@ -36,9 +36,33 @@ export async function adminQuery(
   query: string,
   params: unknown[]
 ) {
-  return neonRpc<any[]>('admin_query', {
+  const raw = await neonRpc<unknown>('admin_query_text', {
     p_token: token,
     p_sql: query,
     p_params: params,
   });
+
+  if (Array.isArray(raw)) return raw;
+
+  if (typeof raw === 'string') {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : parsed == null ? [] : [parsed];
+  }
+
+  if (raw && typeof raw === 'object') {
+    const value =
+      (raw as any).admin_query_text ??
+      (raw as any).result ??
+      (raw as any).data;
+
+    if (typeof value === 'string') {
+      const parsed = JSON.parse(value);
+      return Array.isArray(parsed) ? parsed : parsed == null ? [] : [parsed];
+    }
+
+    if (Array.isArray(value)) return value;
+    return [raw];
+  }
+
+  return [];
 }
