@@ -1,7 +1,6 @@
 import { AppShell } from '@/components/app-shell';
-import { getCurrentProfile } from '@/lib/current-user';
-import { getAdminToken } from '@/lib/admin-session';
-import { getReportsData } from '@/lib/neon-api';
+import { getPageData } from '@/lib/page-data';
+import type { ReportsData } from '@/lib/neon-api';
 import {
   BarChart3,
   BookOpen,
@@ -14,11 +13,7 @@ import {
 export const dynamic='force-dynamic';
 
 export default async function ReportsPage(){
-  const {profile}=await getCurrentProfile();
-  const token = await getAdminToken();
-  if (!token) throw new Error('Admin session is required');
-
-  const data = await getReportsData(token);
+  const { profile, data } = await getPageData<ReportsData>('reports');
   const s:any = data.summary;
   const groups:any[] = data.groups || [];
   const monthly:any[] = data.monthly || [];
