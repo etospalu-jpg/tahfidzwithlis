@@ -1,7 +1,7 @@
 'use server';
 
-import { sql } from '@/lib/db';
 import { createAdminSession } from '@/lib/admin-session';
+import { loginWithPin } from '@/lib/neon-api';
 import { redirect } from 'next/navigation';
 
 export async function signInAction(
@@ -14,17 +14,17 @@ export async function signInAction(
     return { error: 'Masukkan PIN admin 6 digit.' };
   }
 
-  const rows = await sql`
-    select (value = crypt(${pin}, value)) as ok
-    from app_settings
-    where key='admin_pin_hash'
-    limit 1
-  `;
+  try {
+    const token = await loginWithPin(pin);
 
-  if (!rows[0]?.ok) {
-    return { error: 'PIN admin tidak sesuai.' };
+    if (!token) {
+      return { error: 'PIN admin tidak sesuai.' };
+    }
+
+    await createAdminSession(token);
+  } catch {
+    return { error: 'Layanan sedang tidak tersedia. Coba lagi beberapa detik.' };
   }
 
-  await createAdminSession();
   redirect('/dashboard');
 }
