@@ -184,3 +184,23 @@ export async function changeAdminPin(
     p_new_pin: newPin,
   });
 }
+
+
+export type AppPageBundle<T> = {
+  profile: AdminProfile;
+  data: T;
+};
+
+export async function getAppPage<T>(
+  token: string,
+  page: string,
+  arg: string | null = null
+) {
+  return normalizeJson<AppPageBundle<T>>(
+    await neonRpc<unknown>('app_page', {
+      p_token: token,
+      p_page: page,
+      p_arg: arg,
+    })
+  );
+}
