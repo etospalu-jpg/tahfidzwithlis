@@ -1,8 +1,7 @@
 'use client';
 
 import { useActionState } from 'react';
-import Link from 'next/link';
-import { BookOpenCheck, ArrowRight, ShieldCheck } from 'lucide-react';
+import { BookOpenCheck, ArrowRight, ShieldCheck, KeyRound } from 'lucide-react';
 import { signInAction } from './actions';
 
 export default function SignInPage() {
@@ -26,16 +25,16 @@ export default function SignInPage() {
           <div className="py-16">
             <div className="text-[#d8c29a] text-xs font-black tracking-[.18em] uppercase mb-5">Modern Tahfidz Workspace</div>
             <h1 className="text-5xl xl:text-6xl font-semibold leading-[1.04] tracking-[-.045em]">
-              Setiap hafalan punya perjalanan. <span className="text-[#d8c29a]">Pantau dengan utuh.</span>
+              Satu ruang kerja untuk <span className="text-[#d8c29a]">membimbing hafalan.</span>
             </h1>
             <p className="mt-7 text-lg leading-8 text-white/65 max-w-lg">
-              Satu ruang kerja premium untuk setoran, murajaah, target, catatan guru, dan perkembangan setiap siswa.
+              Pantau siswa, setoran, murajaah, target, dan catatan perkembangan dalam satu sistem yang tenang dan terarah.
             </p>
           </div>
 
           <div className="flex items-center gap-3 text-sm text-white/55">
             <ShieldCheck size={18} className="text-[#d8c29a]" />
-            Data tersimpan aman di cloud PostgreSQL Neon.
+            Akses administrator dilindungi dengan sesi server-side.
           </div>
         </div>
       </section>
@@ -47,29 +46,40 @@ export default function SignInPage() {
             <div><div className="font-extrabold">TahfidzWithLis</div><div className="text-xs muted">Monitoring tahfidz modern</div></div>
           </div>
 
-          <span className="gold-kicker">Selamat datang kembali</span>
-          <h2 className="text-4xl font-semibold tracking-[-.04em] mt-3">Masuk ke ruang guru.</h2>
-          <p className="muted mt-3 leading-7">Lanjutkan pemantauan hafalan dan perkembangan siswa Anda.</p>
+          <div className="h-12 w-12 rounded-2xl bg-[#f3ead8] text-[#8b6c2f] grid place-items-center mb-7">
+            <KeyRound size={21}/>
+          </div>
+          <span className="gold-kicker">Akses administrator</span>
+          <h2 className="text-4xl font-semibold tracking-[-.04em] mt-3">Masukkan PIN.</h2>
+          <p className="muted mt-3 leading-7">Untuk sementara, administrator masuk cukup menggunakan satu PIN tanpa akun email.</p>
 
           <form action={action} className="mt-9 space-y-5">
             <div>
-              <label className="label" htmlFor="email">Email</label>
-              <input className="field" id="email" name="email" type="email" autoComplete="email" placeholder="nama@lembaga.sch.id" required />
-            </div>
-            <div>
-              <label className="label" htmlFor="password">Kata sandi</label>
-              <input className="field" id="password" name="password" type="password" autoComplete="current-password" placeholder="••••••••" required />
+              <label className="label" htmlFor="pin">PIN Admin</label>
+              <input
+                className="field text-center text-2xl tracking-[.35em] font-extrabold"
+                id="pin"
+                name="pin"
+                type="password"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                maxLength={6}
+                autoComplete="off"
+                placeholder="••••••"
+                required
+                autoFocus
+              />
             </div>
 
             {state?.error && <div className="rounded-2xl bg-red-50 border border-red-100 px-4 py-3 text-sm text-red-700">{state.error}</div>}
 
             <button className="btn-primary w-full" disabled={pending}>
-              {pending ? 'Memverifikasi…' : <>Masuk <ArrowRight size={17}/></>}
+              {pending ? 'Memverifikasi…' : <>Masuk Dashboard <ArrowRight size={17}/></>}
             </button>
           </form>
 
-          <div className="mt-7 text-sm muted">
-            Setup pertama? <Link href="/auth/sign-up" className="font-bold text-[#12372A] hover:underline">Buat akun administrator</Link>
+          <div className="mt-7 rounded-2xl border border-[#12372A]/8 bg-white/55 px-4 py-3 text-xs muted leading-5">
+            PIN sementara dapat diganti nanti dari menu pengaturan admin.
           </div>
         </div>
       </section>
