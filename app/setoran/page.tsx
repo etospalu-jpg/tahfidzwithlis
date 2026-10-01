@@ -1,7 +1,8 @@
 import { AppShell } from '@/components/app-shell';
 import { SubmitButton } from '@/components/submit-button';
 import { getCurrentProfile } from '@/lib/current-user';
-import { sql } from '@/lib/db';
+import { getAdminToken } from '@/lib/admin-session';
+import { getSetoranFormData } from '@/lib/neon-api';
 import { saveSetoranAction } from './actions';
 import { BookOpenCheck, Gauge, NotebookPen } from 'lucide-react';
 
@@ -10,13 +11,9 @@ export const dynamic = 'force-dynamic';
 export default async function SetoranPage({ searchParams }: { searchParams: Promise<{student?:string}> }) {
   const { profile } = await getCurrentProfile();
   const { student: selected='' } = await searchParams;
-  const students = await sql`
-    select s.id,s.full_name,s.student_no,c.name as class_name,g.name as group_name
-    from students s
-    left join classes c on c.id=s.class_id
-    left join tahfidz_groups g on g.id=s.tahfidz_group_id
-    where s.organization_id=${profile.organization_id} and s.status='active'
-    order by s.full_name`;
+  const token = await getAdminToken();
+  if (!token) throw new Error('Admin session is required');
+  const students = await getSetoranFormData(token);
 
   const today = new Date().toISOString().slice(0,10);
 
