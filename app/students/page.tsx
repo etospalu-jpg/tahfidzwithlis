@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { AppShell } from '@/components/app-shell';
 import { getCurrentProfile } from '@/lib/current-user';
-import { sql } from '@/lib/db';
+import { getAdminToken } from '@/lib/admin-session';
+import { getStudentsList } from '@/lib/neon-api';
 import { Search, ChevronRight, Users } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
@@ -11,35 +12,9 @@ export default async function StudentsPage({ searchParams }: { searchParams: Pro
   const { q='' } = await searchParams;
   const term = q.trim();
 
-  const students = term
-    ? await sql`
-      with last_session as (
-        select distinct on (student_id) student_id,session_date,overall_score,status,surah_name
-        from memorization_sessions where organization_id=${profile.organization_id}
-        order by student_id,session_date desc,created_at desc
-      )
-      select s.*,c.name as class_name,g.name as group_name,l.session_date,l.overall_score,l.status as last_status,l.surah_name
-      from students s
-      left join classes c on c.id=s.class_id
-      left join tahfidz_groups g on g.id=s.tahfidz_group_id
-      left join last_session l on l.student_id=s.id
-      where s.organization_id=${profile.organization_id}
-        and s.status='active'
-        and s.full_name ilike ${'%' + term + '%'}
-      order by s.full_name`
-    : await sql`
-      with last_session as (
-        select distinct on (student_id) student_id,session_date,overall_score,status,surah_name
-        from memorization_sessions where organization_id=${profile.organization_id}
-        order by student_id,session_date desc,created_at desc
-      )
-      select s.*,c.name as class_name,g.name as group_name,l.session_date,l.overall_score,l.status as last_status,l.surah_name
-      from students s
-      left join classes c on c.id=s.class_id
-      left join tahfidz_groups g on g.id=s.tahfidz_group_id
-      left join last_session l on l.student_id=s.id
-      where s.organization_id=${profile.organization_id} and s.status='active'
-      order by s.full_name`;
+  const token = await getAdminToken();
+  if (!token) throw new Error('Admin session is required');
+  const students = await getStudentsList(token, term);
 
   return (
     <AppShell userName={profile.full_name} role={profile.role} institution={profile.institution_name}>
