@@ -1,9 +1,8 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { AppShell } from '@/components/app-shell';
-import { getCurrentProfile } from '@/lib/current-user';
-import { getAdminToken } from '@/lib/admin-session';
-import { getStudentDetail } from '@/lib/neon-api';
+import { getPageData } from '@/lib/page-data';
+import type { StudentDetailData } from '@/lib/neon-api';
 import {
   ArrowLeft,
   BookOpen,
@@ -19,13 +18,8 @@ import {
 export const dynamic = 'force-dynamic';
 
 export default async function StudentDetailPage({ params }: { params: Promise<{id:string}> }) {
-  const { profile } = await getCurrentProfile();
   const { id } = await params;
-
-  const token = await getAdminToken();
-  if (!token) throw new Error('Admin session is required');
-
-  const data = await getStudentDetail(token, id);
+  const { profile, data } = await getPageData<StudentDetailData | null>('student_detail', id);
   if (!data) notFound();
 
   const student:any = data.student;
