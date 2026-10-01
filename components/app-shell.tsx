@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { BookOpenCheck, LayoutDashboard, Users, PlusCircle, ClipboardList, Settings, LogOut, Bell, Search } from 'lucide-react';
+import { BookOpenCheck, LayoutDashboard, Users, PlusCircle, ClipboardList, Settings, LogOut, Bell, Search, SlidersHorizontal } from 'lucide-react';
 import { signOutAction } from '@/app/actions';
 
 type Props = {
@@ -13,6 +13,7 @@ const nav = [
   { href:'/dashboard', label:'Beranda', icon:LayoutDashboard },
   { href:'/students', label:'Siswa', icon:Users },
   { href:'/setoran', label:'Setoran', icon:PlusCircle },
+  { href:'/manage', label:'Kelola', icon:SlidersHorizontal },
   { href:'/reports', label:'Laporan', icon:ClipboardList },
 ];
 
@@ -60,7 +61,7 @@ export function AppShell({ children, userName, role, institution }: Props) {
       </main>
 
       <nav className="lg:hidden fixed bottom-3 left-3 right-3 z-40">
-        <div className="grid grid-cols-4 rounded-[24px] bg-[#12372A]/96 backdrop-blur-xl px-2 py-2 shadow-[0_18px_45px_rgba(18,55,42,.25)]">
+        <div className="grid grid-cols-5 rounded-[24px] bg-[#12372A]/96 backdrop-blur-xl px-2 py-2 shadow-[0_18px_45px_rgba(18,55,42,.25)]">
           {nav.map(({href,label,icon:Icon}) => (
             <Link key={href} href={href} className="flex flex-col items-center gap-1 py-2 text-white/67 active:text-white">
               <Icon size={19}/><span className="text-[10px] font-bold">{label}</span>
