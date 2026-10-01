@@ -100,8 +100,19 @@ export async function getStudentDetail(token: string, studentId: string) {
   );
 }
 
+export type ReportsData = {
+  summary: {
+    students: number;
+    sessions: number;
+    avg_score: number | string;
+    avg_target: number | string;
+  };
+  groups: any[];
+  monthly: any[];
+};
+
 export async function getReportsData(token: string) {
-  return normalizeJson<any>(
+  return normalizeJson<ReportsData>(
     await neonRpc<unknown>('reports_data', { p_token: token })
   );
 }
@@ -159,4 +170,17 @@ export async function adminQuery(
   const parsed = normalizeJson<any>(raw);
   if (Array.isArray(parsed)) return parsed;
   return parsed == null ? [] : [parsed];
+}
+
+
+export async function changeAdminPin(
+  token: string,
+  currentPin: string,
+  newPin: string
+) {
+  return neonRpc<boolean>('change_admin_pin', {
+    p_token: token,
+    p_current_pin: currentPin,
+    p_new_pin: newPin,
+  });
 }
