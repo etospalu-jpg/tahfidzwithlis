@@ -66,3 +66,31 @@ export async function adminQuery(
 
   return [];
 }
+
+
+export type AdminProfile = {
+  organization_id: string;
+  institution_name: string;
+  full_name: string;
+  role: 'admin';
+};
+
+export type DashboardData = {
+  summary: {
+    students: number;
+    sessions_month: number;
+    avg_score: number | string;
+    need_attention: number;
+  };
+  focus: any[];
+  recent: any[];
+  groups: any[];
+};
+
+export async function getAdminProfile(token: string) {
+  return neonRpc<AdminProfile | null>('admin_profile', { p_token: token });
+}
+
+export async function getDashboardData(token: string) {
+  return neonRpc<DashboardData>('dashboard_data', { p_token: token });
+}
