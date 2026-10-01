@@ -9,12 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@neondatabase/serverless": "latest",
     "lucide-react": "latest",
     "next": "latest",
     "react": "19.2.0",
     "react-dom": "19.2.0",
-    "zod": "latest"
+    "zod": "latest",
+    "@neondatabase/neon-js": "latest"
   },
   "devDependencies": {
     "@types/node": "latest",
