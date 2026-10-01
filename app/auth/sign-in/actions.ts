@@ -1,19 +1,30 @@
 'use server';
 
-import { auth } from '@/lib/auth/server';
+import { sql } from '@/lib/db';
+import { createAdminSession } from '@/lib/admin-session';
 import { redirect } from 'next/navigation';
 
 export async function signInAction(
   _prev: { error?: string } | null,
   formData: FormData
 ) {
-  const email = String(formData.get('email') || '').trim();
-  const password = String(formData.get('password') || '');
+  const pin = String(formData.get('pin') || '').trim();
 
-  if (!email || !password) return { error: 'Email dan kata sandi wajib diisi.' };
+  if (!/^\d{6}$/.test(pin)) {
+    return { error: 'Masukkan PIN admin 6 digit.' };
+  }
 
-  const { error } = await auth.signIn.email({ email, password });
-  if (error) return { error: error.message || 'Login gagal. Periksa kembali akun Anda.' };
+  const rows = await sql`
+    select (value = crypt(${pin}, value)) as ok
+    from app_settings
+    where key='admin_pin_hash'
+    limit 1
+  `;
 
+  if (!rows[0]?.ok) {
+    return { error: 'PIN admin tidak sesuai.' };
+  }
+
+  await createAdminSession();
   redirect('/dashboard');
 }
