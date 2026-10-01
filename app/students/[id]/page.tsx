@@ -17,19 +17,19 @@ export default async function StudentDetailPage({ params }: { params: Promise<{i
     left join classes c on c.id=s.class_id
     left join tahfidz_groups g on g.id=s.tahfidz_group_id
     left join teachers t on t.id=g.teacher_id
-    where s.id=\${id} and s.organization_id=\${profile.organization_id}
+    where s.id=${id} and s.organization_id=${profile.organization_id}
     limit 1`;
 
   if (!students.length) notFound();
   const student:any=students[0];
 
   const [sessions, targetRows, notes] = await Promise.all([
-    sql`select * from memorization_sessions where student_id=\${id} order by session_date desc,created_at desc limit 12`,
+    sql`select * from memorization_sessions where student_id=${id} order by session_date desc,created_at desc limit 12`,
     sql`
       select coalesce(sum(ms.pages),0) as done_pages, mt.target_pages
       from memorization_targets mt
       left join memorization_sessions ms on ms.student_id=mt.student_id and ms.session_date between mt.start_date and mt.end_date
-      where mt.student_id=\${id} and mt.status='active'
+      where mt.student_id=${id} and mt.status='active'
       group by mt.id,mt.target_pages
       order by mt.start_date desc
       limit 1`,
@@ -37,7 +37,7 @@ export default async function StudentDetailPage({ params }: { params: Promise<{i
       select n.*,t.full_name as teacher_name
       from teacher_notes n
       left join teachers t on t.id=n.teacher_id
-      where n.student_id=\${id}
+      where n.student_id=${id}
       order by n.created_at desc
       limit 5`
   ]);
@@ -60,18 +60,18 @@ export default async function StudentDetailPage({ params }: { params: Promise<{i
               <h1 className="text-4xl sm:text-5xl font-semibold tracking-[-.045em] mt-1">{student.full_name}</h1>
               <p className="muted mt-2">{student.class_name || 'Tanpa kelas'} · {student.group_name || 'Tanpa halaqah'} · {student.teacher_name || 'Belum ada pembimbing'}</p>
             </div>
-            <Link href={`/setoran?student=\${student.id}`} className="btn-primary self-start xl:self-auto"><PlusCircle size={17}/> Catat Setoran</Link>
+            <Link href={`/setoran?student=${student.id}`} className="btn-primary self-start xl:self-auto"><PlusCircle size={17}/> Catat Setoran</Link>
           </div>
 
           <div className="grid sm:grid-cols-3 gap-3 mt-8">
-            <Mini icon={Target} label="Target bulan" value={`\${pct}%`} note={`\${Number(target.done_pages||0).toFixed(1)} / \${Number(target.target_pages||0).toFixed(0)} halaman`} />
+            <Mini icon={Target} label="Target bulan" value={`${pct}%`} note={`${Number(target.done_pages||0).toFixed(1)} / ${Number(target.target_pages||0).toFixed(0)} halaman`} />
             <Mini icon={Sparkles} label="Rata-rata kualitas" value={avg?String(avg):'—'} note="12 setoran terakhir" />
-            <Mini icon={BookOpen} label="Terakhir" value={current?.surah_name || '—'} note={current ? `\${formatDate(current.session_date)} · \${labelType(current.session_type)}` : 'Belum ada setoran'} />
+            <Mini icon={BookOpen} label="Terakhir" value={current?.surah_name || '—'} note={current ? `${formatDate(current.session_date)} · ${labelType(current.session_type)}` : 'Belum ada setoran'} />
           </div>
 
           <div className="mt-7">
             <div className="flex items-center justify-between text-xs font-bold"><span>Progres target aktif</span><span>{pct}%</span></div>
-            <div className="progress-track mt-2"><div className="progress-fill" style={{width:`\${pct}%`}}/></div>
+            <div className="progress-track mt-2"><div className="progress-fill" style={{width:`${pct}%`}}/></div>
           </div>
         </section>
 
