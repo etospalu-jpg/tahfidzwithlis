@@ -2,7 +2,6 @@
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { getCurrentProfile } from '@/lib/current-user';
 import { getAdminToken } from '@/lib/admin-session';
 import { adminMutate } from '@/lib/neon-api';
 
@@ -11,9 +10,8 @@ function clean(value: FormDataEntryValue | null) {
 }
 
 async function tokenOrThrow() {
-  await getCurrentProfile();
   const token = await getAdminToken();
-  if (!token) throw new Error('Admin session is required');
+  if (!token) redirect('/auth/sign-in');
   return token;
 }
 
