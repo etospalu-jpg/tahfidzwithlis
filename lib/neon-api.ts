@@ -140,3 +140,23 @@ export async function adminMutate(
     })
   );
 }
+
+
+/**
+ * Legacy compatibility only. Core application routes no longer use arbitrary SQL.
+ * Kept temporarily so any stale module reference cannot break production builds.
+ */
+export async function adminQuery(
+  token: string,
+  query: string,
+  params: unknown[]
+) {
+  const raw = await neonRpc<unknown>('admin_query_text', {
+    p_token: token,
+    p_sql: query,
+    p_params: params,
+  });
+  const parsed = normalizeJson<any>(raw);
+  if (Array.isArray(parsed)) return parsed;
+  return parsed == null ? [] : [parsed];
+}
