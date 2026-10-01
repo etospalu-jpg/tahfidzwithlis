@@ -1,8 +1,6 @@
 import Link from 'next/link';
 import { AppShell } from '@/components/app-shell';
-import { getCurrentProfile } from '@/lib/current-user';
-import { getAdminToken } from '@/lib/admin-session';
-import { getStudentsList } from '@/lib/neon-api';
+import { getPageData } from '@/lib/page-data';
 import {
   Search,
   ChevronRight,
@@ -18,13 +16,9 @@ export default async function StudentsPage({
 }: {
   searchParams: Promise<{ q?: string }>;
 }) {
-  const { profile } = await getCurrentProfile();
   const { q = '' } = await searchParams;
   const term = q.trim();
-
-  const token = await getAdminToken();
-  if (!token) throw new Error('Admin session is required');
-  const students = await getStudentsList(token, term);
+  const { profile, data: students } = await getPageData<any[]>('students', term);
 
   return (
     <AppShell userName={profile.full_name} role={profile.role} institution={profile.institution_name}>
