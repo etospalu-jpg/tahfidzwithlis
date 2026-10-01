@@ -2,9 +2,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { AppShell } from '@/components/app-shell';
 import { SubmitButton } from '@/components/submit-button';
-import { getCurrentProfile } from '@/lib/current-user';
-import { getAdminToken } from '@/lib/admin-session';
-import { getStudentEditData } from '@/lib/neon-api';
+import { getPageData } from '@/lib/page-data';
+import type { StudentEditData } from '@/lib/neon-api';
 import { updateStudentAction } from '../../actions';
 import {
   ArrowLeft,
@@ -17,12 +16,8 @@ import {
 export const dynamic='force-dynamic';
 
 export default async function EditStudentPage({params}:{params:Promise<{id:string}>}){
-  const {profile}=await getCurrentProfile();
   const {id}=await params;
-  const token = await getAdminToken();
-  if (!token) throw new Error('Admin session is required');
-
-  const data = await getStudentEditData(token, id);
+  const { profile, data } = await getPageData<StudentEditData | null>('student_edit', id);
   if (!data) notFound();
 
   const s:any = data.student;
