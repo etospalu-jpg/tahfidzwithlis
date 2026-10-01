@@ -1,9 +1,9 @@
 'use server';
 
-import { auth } from '@/lib/auth/server';
+import { clearAdminSession } from '@/lib/admin-session';
 import { redirect } from 'next/navigation';
 
 export async function signOutAction() {
-  await auth.signOut();
+  await clearAdminSession();
   redirect('/auth/sign-in');
 }
