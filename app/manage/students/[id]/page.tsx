@@ -3,7 +3,8 @@ import { notFound } from 'next/navigation';
 import { AppShell } from '@/components/app-shell';
 import { SubmitButton } from '@/components/submit-button';
 import { getCurrentProfile } from '@/lib/current-user';
-import { sql } from '@/lib/db';
+import { getAdminToken } from '@/lib/admin-session';
+import { getStudentEditData } from '@/lib/neon-api';
 import { updateStudentAction } from '../../actions';
 import { ArrowLeft, UserRoundCog } from 'lucide-react';
 
@@ -12,13 +13,15 @@ export const dynamic='force-dynamic';
 export default async function EditStudentPage({params}:{params:Promise<{id:string}>}){
   const {profile}=await getCurrentProfile();
   const {id}=await params;
-  const [rows,classes,groups]=await Promise.all([
-    sql`select * from students where id=\${id} and organization_id=\${profile.organization_id} limit 1`,
-    sql`select id,name from classes where organization_id=\${profile.organization_id} order by name`,
-    sql`select id,name from tahfidz_groups where organization_id=\${profile.organization_id} order by name`
-  ]);
-  if(!rows.length) notFound();
-  const s:any=rows[0];
+  const token = await getAdminToken();
+  if (!token) throw new Error('Admin session is required');
+
+  const data = await getStudentEditData(token, id);
+  if (!data) notFound();
+
+  const s:any = data.student;
+  const classes:any[] = data.classes || [];
+  const groups:any[] = data.groups || [];
 
   return <AppShell userName={profile.full_name} role={profile.role} institution={profile.institution_name}>
     <div className="fade-up pt-5 sm:pt-8 pb-8">
