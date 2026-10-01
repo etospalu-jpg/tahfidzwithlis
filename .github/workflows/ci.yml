@@ -11,7 +11,7 @@ jobs:
     env:
       DATABASE_URL: postgresql://user:pass@localhost:5432/db
       NEON_AUTH_BASE_URL: https://example.neonauth.example.com/neondb/auth
-      NEON_AUTH_COOKIE_SECRET: 0123456789012345678901234567890123456789
+      NEON_AUTH_COOKIE_SECRET: "ci-secret-tahfidzwithlis-0123456789-abcdef"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
