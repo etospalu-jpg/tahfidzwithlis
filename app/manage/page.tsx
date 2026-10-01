@@ -1,9 +1,8 @@
 import Link from 'next/link';
 import { AppShell } from '@/components/app-shell';
 import { SubmitButton } from '@/components/submit-button';
-import { getCurrentProfile } from '@/lib/current-user';
-import { getAdminToken } from '@/lib/admin-session';
-import { getManageData } from '@/lib/neon-api';
+import { getPageData } from '@/lib/page-data';
+import type { ManageData } from '@/lib/neon-api';
 import {
   createTeacherAction,
   createClassAction,
@@ -24,11 +23,7 @@ import {
 export const dynamic='force-dynamic';
 
 export default async function ManagePage(){
-  const { profile } = await getCurrentProfile();
-  const token = await getAdminToken();
-  if (!token) throw new Error('Admin session is required');
-
-  const data = await getManageData(token);
+  const { profile, data } = await getPageData<ManageData>('manage');
   const teachers = data.teachers || [];
   const classes = data.classes || [];
   const groups = data.groups || [];
