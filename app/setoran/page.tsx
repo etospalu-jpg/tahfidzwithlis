@@ -15,7 +15,7 @@ export default async function SetoranPage({ searchParams }: { searchParams: Prom
     from students s
     left join classes c on c.id=s.class_id
     left join tahfidz_groups g on g.id=s.tahfidz_group_id
-    where s.organization_id=\${profile.organization_id} and s.status='active'
+    where s.organization_id=${profile.organization_id} and s.status='active'
     order by s.full_name`;
 
   const today = new Date().toISOString().slice(0,10);
