@@ -1,6 +1,14 @@
 import Link from 'next/link';
-import { BookOpenCheck, LayoutDashboard, Users, PlusCircle, ClipboardList, Settings, LogOut, Bell, Search, SlidersHorizontal } from 'lucide-react';
+import {
+  BookOpenCheck,
+  Search,
+  Settings,
+  LogOut,
+  PlusCircle,
+  UserRound,
+} from 'lucide-react';
 import { signOutAction } from '@/app/actions';
+import { DesktopAppNav, MobileAppNav } from '@/components/app-nav';
 
 type Props = {
   children: React.ReactNode;
@@ -9,65 +17,119 @@ type Props = {
   institution: string;
 };
 
-const nav = [
-  { href:'/dashboard', label:'Beranda', icon:LayoutDashboard },
-  { href:'/students', label:'Siswa', icon:Users },
-  { href:'/setoran', label:'Setoran', icon:PlusCircle },
-  { href:'/manage', label:'Kelola', icon:SlidersHorizontal },
-  { href:'/reports', label:'Laporan', icon:ClipboardList },
-];
-
 export function AppShell({ children, userName, role, institution }: Props) {
+  const firstName = userName.split(' ')[0] || 'Admin';
+
   return (
     <div className="min-h-screen">
-      <aside className="hidden lg:flex fixed inset-y-0 left-0 w-[270px] p-5">
-        <div className="w-full rounded-[30px] bg-[#12372A] text-white px-5 py-6 flex flex-col shadow-[0_20px_70px_rgba(18,55,42,.2)]">
-          <div className="flex items-center gap-3 px-2">
-            <div className="h-11 w-11 rounded-2xl bg-white/10 border border-white/15 grid place-items-center"><BookOpenCheck size={22}/></div>
-            <div><div className="font-extrabold tracking-tight">TahfidzWithLis</div><div className="text-[11px] text-white/48 max-w-[150px] truncate">{institution}</div></div>
-          </div>
-          <nav className="mt-10 space-y-2">
-            {nav.map(({href,label,icon:Icon}) => (
-              <Link key={href} href={href} className="flex items-center gap-3 rounded-2xl px-4 py-3.5 text-sm font-bold text-white/66 hover:text-white hover:bg-white/10 transition">
-                <Icon size={18}/><span>{label}</span>
+      <aside className="hidden lg:flex fixed inset-y-0 left-0 w-[252px] p-4 z-40">
+        <div className="w-full rounded-[28px] bg-[#12372A] text-white px-4 py-5 flex flex-col shadow-[0_22px_70px_rgba(18,55,42,.19)]">
+          <Link href="/dashboard" className="flex items-center gap-3 px-2 py-1">
+            <div className="h-11 w-11 rounded-[15px] bg-white/[.10] border border-white/[.13] grid place-items-center">
+              <BookOpenCheck size={22} strokeWidth={2.15}/>
+            </div>
+            <div className="min-w-0">
+              <div className="font-extrabold tracking-[-.02em]">TahfidzWithLis</div>
+              <div className="text-[10px] text-white/45 max-w-[145px] truncate mt-0.5">{institution}</div>
+            </div>
+          </Link>
+
+          <DesktopAppNav />
+
+          <div className="mt-auto space-y-1">
+            <Link
+              href="/settings"
+              className="flex items-center gap-3 rounded-[15px] px-3.5 py-3 text-sm font-bold text-white/60 hover:text-white hover:bg-white/[.08] transition"
+            >
+              <Settings size={19} strokeWidth={2.1}/>
+              Pengaturan
+            </Link>
+
+            <div className="mt-4 border-t border-white/[.10] pt-4">
+              <Link href="/settings" className="flex items-center gap-3 rounded-[16px] px-3 py-2.5 hover:bg-white/[.07] transition">
+                <div className="h-10 w-10 rounded-[13px] bg-white/[.10] grid place-items-center text-white/80">
+                  <UserRound size={19}/>
+                </div>
+                <div className="min-w-0">
+                  <div className="font-extrabold text-sm truncate">{userName}</div>
+                  <div className="text-[10px] text-white/42 mt-0.5 capitalize">{role.replaceAll('_',' ')}</div>
+                </div>
               </Link>
-            ))}
-          </nav>
-          <div className="mt-auto">
-            <Link href="/settings" className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-white/58 hover:text-white"><Settings size={18}/> Pengaturan</Link>
-            <div className="mt-4 border-t border-white/10 pt-5">
-              <div className="px-3 mb-4"><div className="font-bold text-sm truncate">{userName}</div><div className="text-[11px] text-white/45 mt-1 capitalize">{role.replaceAll('_',' ')}</div></div>
-              <form action={signOutAction}><button className="w-full flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-white/58 hover:text-white hover:bg-white/10"><LogOut size={18}/> Keluar</button></form>
+
+              <form action={signOutAction} className="mt-1">
+                <button className="w-full flex items-center gap-3 rounded-[15px] px-3.5 py-3 text-sm font-bold text-white/56 hover:text-white hover:bg-white/[.08] transition">
+                  <LogOut size={19}/>
+                  Keluar
+                </button>
+              </form>
             </div>
           </div>
         </div>
       </aside>
 
-      <main className="lg:pl-[290px] pb-24 lg:pb-8">
-        <header className="sticky top-0 z-30 px-4 sm:px-7 lg:px-8 py-4">
-          <div className="max-w-[1380px] mx-auto flex items-center justify-between gap-4 rounded-[22px] border border-white/70 bg-[#f5f3ec]/85 backdrop-blur-xl px-2 py-2">
-            <div className="lg:hidden flex items-center gap-2">
-              <div className="h-10 w-10 rounded-2xl bg-[#12372A] text-white grid place-items-center"><BookOpenCheck size={20}/></div>
-              <div><div className="font-extrabold text-sm">TahfidzWithLis</div><div className="text-[10px] muted truncate max-w-[150px]">{institution}</div></div>
-            </div>
-            <div className="hidden lg:flex items-center gap-2 text-sm muted px-3"><Search size={17}/> <span>Cari siswa, surah, atau catatan…</span></div>
-            <div className="ml-auto flex items-center gap-2">
-              <button className="h-10 w-10 rounded-2xl bg-white border border-[#12372A]/8 grid place-items-center relative"><Bell size={17}/><span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-[#B69A62]"/></button>
-              <div className="hidden sm:flex h-10 items-center rounded-2xl bg-white border border-[#12372A]/8 px-3 text-xs font-extrabold">{userName.split(' ')[0]}</div>
+      <main className="lg:pl-[268px] mobile-safe-bottom lg:pb-6">
+        <header className="sticky top-0 z-30 px-3 sm:px-5 lg:px-6 pt-3 lg:pt-4">
+          <div className="page-shell">
+            <div className="min-h-[58px] flex items-center justify-between gap-3 rounded-[20px] border border-white/80 bg-[#f5f3ec]/88 backdrop-blur-xl px-2.5 sm:px-3 shadow-[0_8px_26px_rgba(28,46,37,.035)]">
+              <Link href="/dashboard" className="lg:hidden flex min-w-0 items-center gap-2.5">
+                <div className="h-10 w-10 shrink-0 rounded-[13px] bg-[#12372A] text-white grid place-items-center">
+                  <BookOpenCheck size={20}/>
+                </div>
+                <div className="min-w-0">
+                  <div className="font-extrabold text-sm tracking-[-.02em] truncate">TahfidzWithLis</div>
+                  <div className="text-[9px] muted truncate max-w-[130px]">{institution}</div>
+                </div>
+              </Link>
+
+              <form action="/students" className="hidden lg:block flex-1 max-w-[620px]">
+                <div className="relative">
+                  <Search size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#7b8780]"/>
+                  <input
+                    name="q"
+                    className="w-full h-10 rounded-[13px] border border-transparent bg-transparent pl-10 pr-3 text-sm outline-none placeholder:text-[#89958e] hover:bg-white/45 focus:bg-white focus:border-[#12372A]/10 transition"
+                    placeholder="Cari siswa..."
+                  />
+                </div>
+              </form>
+
+              <div className="ml-auto flex items-center gap-2">
+                <Link
+                  href="/students"
+                  className="lg:hidden h-10 w-10 rounded-[13px] bg-white border border-[#12372A]/[.08] grid place-items-center text-[#415049]"
+                  aria-label="Cari siswa"
+                >
+                  <Search size={19}/>
+                </Link>
+
+                <Link
+                  href="/setoran"
+                  className="hidden sm:inline-flex h-10 items-center gap-2 rounded-[13px] bg-[#12372A] text-white px-3.5 text-xs font-extrabold shadow-[0_8px_18px_rgba(18,55,42,.13)]"
+                >
+                  <PlusCircle size={17}/>
+                  Setoran
+                </Link>
+
+                <Link
+                  href="/settings"
+                  className="h-10 items-center gap-2 rounded-[13px] bg-white border border-[#12372A]/[.08] px-3 hidden sm:flex"
+                >
+                  <div className="h-6 w-6 rounded-[9px] bg-[#edf2ee] text-[#12372A] grid place-items-center">
+                    <UserRound size={14}/>
+                  </div>
+                  <span className="text-xs font-extrabold">{firstName}</span>
+                </Link>
+              </div>
             </div>
           </div>
         </header>
-        <div className="max-w-[1380px] mx-auto px-4 sm:px-7 lg:px-8">{children}</div>
+
+        <div className="page-shell px-4 sm:px-6 lg:px-6">
+          {children}
+        </div>
       </main>
 
-      <nav className="lg:hidden fixed bottom-3 left-3 right-3 z-40">
-        <div className="grid grid-cols-5 rounded-[24px] bg-[#12372A]/96 backdrop-blur-xl px-2 py-2 shadow-[0_18px_45px_rgba(18,55,42,.25)]">
-          {nav.map(({href,label,icon:Icon}) => (
-            <Link key={href} href={href} className="flex flex-col items-center gap-1 py-2 text-white/67 active:text-white">
-              <Icon size={19}/><span className="text-[10px] font-bold">{label}</span>
-            </Link>
-          ))}
-        </div>
+      <nav className="lg:hidden fixed bottom-2.5 left-2.5 right-2.5 z-50 pb-[env(safe-area-inset-bottom)]">
+        <MobileAppNav />
       </nav>
     </div>
   );
