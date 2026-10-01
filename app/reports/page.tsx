@@ -10,10 +10,10 @@ export default async function ReportsPage(){
   const orgId=profile.organization_id;
   const stats=await sql`
     select
-      (select count(*) from students where organization_id=\${orgId} and status='active')::int as students,
-      (select count(*) from memorization_sessions where organization_id=\${orgId})::int as sessions,
-      coalesce((select round(avg(overall_score),1) from memorization_sessions where organization_id=\${orgId}),0) as avg_score,
-      coalesce((select round(avg(target_pages),1) from students where organization_id=\${orgId} and status='active'),0) as avg_target
+      (select count(*) from students where organization_id=${orgId} and status='active')::int as students,
+      (select count(*) from memorization_sessions where organization_id=${orgId})::int as sessions,
+      coalesce((select round(avg(overall_score),1) from memorization_sessions where organization_id=${orgId}),0) as avg_score,
+      coalesce((select round(avg(target_pages),1) from students where organization_id=${orgId} and status='active'),0) as avg_target
   `;
   const s:any=stats[0];
   return <AppShell userName={profile.full_name} role={profile.role} institution={profile.institution_name}>
