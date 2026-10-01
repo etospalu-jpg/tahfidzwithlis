@@ -2,7 +2,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { AppShell } from '@/components/app-shell';
 import { getCurrentProfile } from '@/lib/current-user';
-import { sql } from '@/lib/db';
+import { getAdminToken } from '@/lib/admin-session';
+import { getStudentDetail } from '@/lib/neon-api';
 import { ArrowLeft, BookOpen, Target, Sparkles, Clock3, MessageSquareText, PlusCircle } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
@@ -11,39 +12,19 @@ export default async function StudentDetailPage({ params }: { params: Promise<{i
   const { profile } = await getCurrentProfile();
   const { id } = await params;
 
-  const students = await sql`
-    select s.*,c.name as class_name,g.name as group_name,t.full_name as teacher_name
-    from students s
-    left join classes c on c.id=s.class_id
-    left join tahfidz_groups g on g.id=s.tahfidz_group_id
-    left join teachers t on t.id=g.teacher_id
-    where s.id=${id} and s.organization_id=${profile.organization_id}
-    limit 1`;
+  const token = await getAdminToken();
+  if (!token) throw new Error('Admin session is required');
 
-  if (!students.length) notFound();
-  const student:any=students[0];
+  const data = await getStudentDetail(token, id);
+  if (!data) notFound();
 
-  const [sessions, targetRows, notes] = await Promise.all([
-    sql`select * from memorization_sessions where student_id=${id} order by session_date desc,created_at desc limit 12`,
-    sql`
-      select coalesce(sum(ms.pages),0) as done_pages, mt.target_pages
-      from memorization_targets mt
-      left join memorization_sessions ms on ms.student_id=mt.student_id and ms.session_date between mt.start_date and mt.end_date
-      where mt.student_id=${id} and mt.status='active'
-      group by mt.id,mt.target_pages
-      order by mt.start_date desc
-      limit 1`,
-    sql`
-      select n.*,t.full_name as teacher_name
-      from teacher_notes n
-      left join teachers t on t.id=n.teacher_id
-      where n.student_id=${id}
-      order by n.created_at desc
-      limit 5`
-  ]);
-
+  const student:any = data.student;
+  const sessions:any[] = data.sessions || [];
+  const notes:any[] = data.notes || [];
   const current:any = sessions[0];
-  const target:any = targetRows[0] || {done_pages:0,target_pages:student.target_pages};
+  const target:any = data.target && Object.keys(data.target).length
+    ? data.target
+    : {done_pages:0,target_pages:student.target_pages};
   const pct = Math.min(100, Math.round(Number(target.done_pages||0)/Math.max(1,Number(target.target_pages||1))*100));
   const avg = sessions.length ? Math.round(sessions.reduce((a:number,b:any)=>a+Number(b.overall_score),0)/sessions.length) : 0;
 
