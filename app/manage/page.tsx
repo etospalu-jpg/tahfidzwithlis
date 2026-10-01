@@ -2,7 +2,8 @@ import Link from 'next/link';
 import { AppShell } from '@/components/app-shell';
 import { SubmitButton } from '@/components/submit-button';
 import { getCurrentProfile } from '@/lib/current-user';
-import { sql } from '@/lib/db';
+import { getAdminToken } from '@/lib/admin-session';
+import { getManageData } from '@/lib/neon-api';
 import { createTeacherAction, createClassAction, createGroupAction, createStudentAction } from './actions';
 import { UsersRound, GraduationCap, Layers3, UserPlus, Pencil, UserCog, School } from 'lucide-react';
 
@@ -10,26 +11,14 @@ export const dynamic='force-dynamic';
 
 export default async function ManagePage(){
   const { profile } = await getCurrentProfile();
-  const orgId=profile.organization_id;
+  const token = await getAdminToken();
+  if (!token) throw new Error('Admin session is required');
 
-  const [teachers,classes,groups,students]=await Promise.all([
-    sql`select id,employee_code,full_name,title,specialization,phone,is_active from teachers where organization_id=\${orgId} order by full_name`,
-    sql`select id,name,grade,homeroom_name from classes where organization_id=\${orgId} order by name`,
-    sql`select g.id,g.name,g.target_label,t.full_name as teacher_name,g.teacher_id,
-               count(s.id)::int as student_count
-        from tahfidz_groups g
-        left join teachers t on t.id=g.teacher_id
-        left join students s on s.tahfidz_group_id=g.id and s.status='active'
-        where g.organization_id=\${orgId}
-        group by g.id,t.full_name
-        order by g.name`,
-    sql`select s.id,s.student_no,s.full_name,s.status,c.name as class_name,g.name as group_name
-        from students s
-        left join classes c on c.id=s.class_id
-        left join tahfidz_groups g on g.id=s.tahfidz_group_id
-        where s.organization_id=\${orgId}
-        order by s.full_name`
-  ]);
+  const data = await getManageData(token);
+  const teachers = data.teachers || [];
+  const classes = data.classes || [];
+  const groups = data.groups || [];
+  const students = data.students || [];
 
   return <AppShell userName={profile.full_name} role={profile.role} institution={profile.institution_name}>
     <div className="fade-up pt-5 sm:pt-8 pb-8">
