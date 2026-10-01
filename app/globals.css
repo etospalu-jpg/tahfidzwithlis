@@ -332,8 +332,23 @@ textarea.field { line-height: 1.6; }
     font-size: .91rem;
     line-height: 1.65;
   }
-  .shell-card { border-radius: 20px; }
-  .soft-card { border-radius: 16px; }
+  .shell-card {
+    border-radius: 20px;
+    background: #fffdf8;
+    backdrop-filter: none;
+    box-shadow: 0 8px 24px rgba(28,46,37,.055);
+  }
+  .soft-card {
+    border-radius: 16px;
+    background: #fff;
+  }
+  .field {
+    min-height: 50px;
+    font-size: 16px;
+  }
+  select.field { padding-right: 34px; }
+  textarea.field { min-height: 118px; }
+  .fade-up { animation-duration: .16s; }
   .metric-card {
     min-height: 108px;
     padding: 16px;
