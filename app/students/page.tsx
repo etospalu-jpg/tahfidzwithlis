@@ -15,7 +15,7 @@ export default async function StudentsPage({ searchParams }: { searchParams: Pro
     ? await sql`
       with last_session as (
         select distinct on (student_id) student_id,session_date,overall_score,status,surah_name
-        from memorization_sessions where organization_id=\${profile.organization_id}
+        from memorization_sessions where organization_id=${profile.organization_id}
         order by student_id,session_date desc,created_at desc
       )
       select s.*,c.name as class_name,g.name as group_name,l.session_date,l.overall_score,l.status as last_status,l.surah_name
@@ -23,14 +23,14 @@ export default async function StudentsPage({ searchParams }: { searchParams: Pro
       left join classes c on c.id=s.class_id
       left join tahfidz_groups g on g.id=s.tahfidz_group_id
       left join last_session l on l.student_id=s.id
-      where s.organization_id=\${profile.organization_id}
+      where s.organization_id=${profile.organization_id}
         and s.status='active'
-        and s.full_name ilike \${'%' + term + '%'}
+        and s.full_name ilike ${'%' + term + '%'}
       order by s.full_name`
     : await sql`
       with last_session as (
         select distinct on (student_id) student_id,session_date,overall_score,status,surah_name
-        from memorization_sessions where organization_id=\${profile.organization_id}
+        from memorization_sessions where organization_id=${profile.organization_id}
         order by student_id,session_date desc,created_at desc
       )
       select s.*,c.name as class_name,g.name as group_name,l.session_date,l.overall_score,l.status as last_status,l.surah_name
@@ -38,7 +38,7 @@ export default async function StudentsPage({ searchParams }: { searchParams: Pro
       left join classes c on c.id=s.class_id
       left join tahfidz_groups g on g.id=s.tahfidz_group_id
       left join last_session l on l.student_id=s.id
-      where s.organization_id=\${profile.organization_id} and s.status='active'
+      where s.organization_id=${profile.organization_id} and s.status='active'
       order by s.full_name`;
 
   return (
@@ -61,7 +61,7 @@ export default async function StudentsPage({ searchParams }: { searchParams: Pro
         <div className="shell-card mt-5 overflow-hidden">
           <div className="divide-y divide-[#12372A]/8">
             {students.map((s:any)=>(
-              <Link key={s.id} href={`/students/\${s.id}`} className="table-row flex items-center gap-4 p-4 sm:px-6 sm:py-5">
+              <Link key={s.id} href={`/students/${s.id}`} className="table-row flex items-center gap-4 p-4 sm:px-6 sm:py-5">
                 <div className="h-12 w-12 rounded-[18px] bg-[#edf2ee] grid place-items-center font-black text-[#12372A] shrink-0">{initials(s.full_name)}</div>
                 <div className="min-w-0 flex-1">
                   <div className="font-extrabold truncate">{s.full_name}</div>
