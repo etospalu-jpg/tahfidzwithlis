@@ -14,21 +14,21 @@ export default async function DashboardPage() {
     sql`
       with last_sessions as (
         select distinct on (student_id) student_id, session_date, overall_score, status
-        from memorization_sessions where organization_id=\${orgId}
+        from memorization_sessions where organization_id=${orgId}
         order by student_id, session_date desc, created_at desc
       )
       select
-        (select count(*) from students where organization_id=\${orgId} and status='active')::int as students,
-        (select count(*) from memorization_sessions where organization_id=\${orgId} and date_trunc('month',session_date)=date_trunc('month',current_date))::int as sessions_month,
-        coalesce((select round(avg(overall_score),1) from memorization_sessions where organization_id=\${orgId} and session_date >= current_date-30),0) as avg_score,
+        (select count(*) from students where organization_id=${orgId} and status='active')::int as students,
+        (select count(*) from memorization_sessions where organization_id=${orgId} and date_trunc('month',session_date)=date_trunc('month',current_date))::int as sessions_month,
+        coalesce((select round(avg(overall_score),1) from memorization_sessions where organization_id=${orgId} and session_date >= current_date-30),0) as avg_score,
         (select count(*) from students s left join last_sessions l on l.student_id=s.id
-         where s.organization_id=\${orgId} and s.status='active'
+         where s.organization_id=${orgId} and s.status='active'
            and (l.session_date is null or l.session_date < current_date-7 or l.overall_score<80))::int as need_attention
     `,
     sql`
       with last_sessions as (
         select distinct on (student_id) student_id, session_date, overall_score, status, surah_name
-        from memorization_sessions where organization_id=\${orgId}
+        from memorization_sessions where organization_id=${orgId}
         order by student_id, session_date desc, created_at desc
       )
       select s.id,s.full_name,g.name as group_name,l.session_date,l.overall_score,l.status,l.surah_name,
@@ -42,7 +42,7 @@ export default async function DashboardPage() {
       from students s
       left join tahfidz_groups g on g.id=s.tahfidz_group_id
       left join last_sessions l on l.student_id=s.id
-      where s.organization_id=\${orgId} and s.status='active'
+      where s.organization_id=${orgId} and s.status='active'
         and (l.session_date is null or l.session_date < current_date-7 or l.overall_score<80 or l.status='perlu_murajaah')
       order by coalesce(l.session_date,'1900-01-01'::date) asc
       limit 5
@@ -52,7 +52,7 @@ export default async function DashboardPage() {
              s.id as student_id,s.full_name
       from memorization_sessions ms
       join students s on s.id=ms.student_id
-      where ms.organization_id=\${orgId}
+      where ms.organization_id=${orgId}
       order by ms.session_date desc, ms.created_at desc
       limit 6
     `,
@@ -61,7 +61,7 @@ export default async function DashboardPage() {
       from tahfidz_groups g
       left join teachers t on t.id=g.teacher_id
       left join students s on s.tahfidz_group_id=g.id and s.status='active'
-      where g.organization_id=\${orgId}
+      where g.organization_id=${orgId}
       group by g.id,t.full_name
       order by g.name
     `
@@ -100,7 +100,7 @@ export default async function DashboardPage() {
               {focus.length === 0 ? (
                 <div className="py-10 text-center"><Sparkles className="mx-auto text-[#B69A62]"/><div className="font-bold mt-3">Semua terlihat stabil</div><p className="muted text-sm mt-1">Belum ada siswa yang masuk indikator perhatian.</p></div>
               ) : focus.map((item:any) => (
-                <Link key={item.id} href={`/students/\${item.id}`} className="table-row flex items-center gap-4 py-4 rounded-xl px-2 -mx-2">
+                <Link key={item.id} href={`/students/${item.id}`} className="table-row flex items-center gap-4 py-4 rounded-xl px-2 -mx-2">
                   <div className="h-11 w-11 rounded-2xl bg-[#eef2ee] grid place-items-center font-black text-[#12372A]">{initials(item.full_name)}</div>
                   <div className="min-w-0 flex-1">
                     <div className="font-extrabold truncate">{item.full_name}</div>
@@ -134,7 +134,7 @@ export default async function DashboardPage() {
           </div>
           <div className="mt-5 grid md:grid-cols-2 xl:grid-cols-3 gap-3">
             {recent.map((r:any) => (
-              <Link href={`/students/\${r.student_id}`} key={r.id} className="soft-card p-4 hover:bg-white transition">
+              <Link href={`/students/${r.student_id}`} key={r.id} className="soft-card p-4 hover:bg-white transition">
                 <div className="flex items-center justify-between gap-3"><div className="font-extrabold truncate">{r.full_name}</div><span className="pill">{Number(r.overall_score).toFixed(0)}</span></div>
                 <div className="text-sm mt-3">{r.surah_name}</div>
                 <div className="flex items-center gap-2 text-xs muted mt-2"><Clock3 size={13}/>{formatDate(r.session_date)} · {labelType(r.session_type)}</div>
