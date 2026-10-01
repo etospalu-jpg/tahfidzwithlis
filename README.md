@@ -6,26 +6,13 @@ Platform full-stack untuk monitoring tahfidz: siswa, setoran, murajaah, target, 
 
 - Next.js + TypeScript
 - Vercel
-- Neon PostgreSQL
-- PIN-based admin access with signed httpOnly session
+- Neon PostgreSQL + Neon Data API\n- PIN-based admin access with database-backed httpOnly session
 - Tailwind CSS
 - PWA shell
 
 ## Environment
 
-Deployment minimal hanya membutuhkan:
-
-```bash
-DATABASE_URL=...
-```
-
-Opsional:
-
-```bash
-ADMIN_SESSION_SECRET=...
-```
-
-Jika `ADMIN_SESSION_SECRET` tidak diisi, server memakai `DATABASE_URL` sebagai sumber secret untuk penandatanganan session cookie.
+Production tidak memerlukan `DATABASE_URL` di Vercel. Aplikasi menggunakan endpoint HTTPS Neon Data API yang tidak mengandung kredensial database.
 
 PIN admin tidak disimpan sebagai plaintext di repository. Hash PIN tersimpan di Neon pada `app_settings.admin_pin_hash`.
 
