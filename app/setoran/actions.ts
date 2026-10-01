@@ -1,6 +1,7 @@
 'use server';
 
-import { sql } from '@/lib/db';
+import { getAdminToken } from '@/lib/admin-session';
+import { adminMutate } from '@/lib/neon-api';
 import { getCurrentProfile } from '@/lib/current-user';
 import { redirect } from 'next/navigation';
 
@@ -13,86 +14,51 @@ function score(formData: FormData, key: string) {
 }
 
 export async function saveSetoranAction(formData: FormData) {
-  const { profile } = await getCurrentProfile();
+  await getCurrentProfile();
+  const token = await getAdminToken();
+  if (!token) throw new Error('Admin session is required');
 
   const studentId = String(formData.get('student_id') || '');
-  const student = await sql`
-    select s.id,s.organization_id,g.teacher_id
-    from students s
-    left join tahfidz_groups g on g.id=s.tahfidz_group_id
-    where s.id=${studentId}
-      and s.organization_id=${profile.organization_id}
-      and s.status='active'
-    limit 1
-  `;
-
-  if (!student.length) throw new Error('Siswa tidak ditemukan.');
-
   const sessionType = String(formData.get('session_type') || 'new');
-  const allowedTypes = ['new','murajaah','tasmi','exam'];
-  if (!allowedTypes.includes(sessionType)) throw new Error('Jenis setoran tidak valid.');
-
   const status = String(formData.get('status') || 'lancar');
-  const allowedStatus = ['belum_lancar','cukup','lancar','sangat_lancar','mutqin','perlu_murajaah'];
-  if (!allowedStatus.includes(status)) throw new Error('Status hafalan tidak valid.');
-
   const sessionDate = String(formData.get('session_date') || '');
   const juz = Number(formData.get('juz_no') || 30);
   const surah = String(formData.get('surah_name') || '').trim();
-  const startAyah = Number(formData.get('start_ayah') || 0) || null;
-  const endAyah = Number(formData.get('end_ayah') || 0) || null;
+  const startAyah = String(formData.get('start_ayah') || '').trim();
+  const endAyah = String(formData.get('end_ayah') || '').trim();
   const pages = Number(formData.get('pages') || 0);
-  const fluency = score(formData,'fluency');
-  const tajwid = score(formData,'tajwid');
-  const makhraj = score(formData,'makhraj');
-  const accuracy = score(formData,'accuracy');
-  const murajaahScoreRaw = String(formData.get('murajaah_score') || '').trim();
-  const murajaahScore = murajaahScoreRaw ? score(formData,'murajaah_score') : null;
   const mistakes = Math.max(0, Number(formData.get('mistakes_count') || 0));
   const notes = String(formData.get('notes') || '').trim();
+  const murajaahScoreRaw = String(formData.get('murajaah_score') || '').trim();
 
+  const allowedTypes = ['new','murajaah','tasmi','exam'];
+  const allowedStatus = ['belum_lancar','cukup','lancar','sangat_lancar','mutqin','perlu_murajaah'];
+
+  if (!studentId) throw new Error('Siswa tidak ditemukan.');
+  if (!allowedTypes.includes(sessionType)) throw new Error('Jenis setoran tidak valid.');
+  if (!allowedStatus.includes(status)) throw new Error('Status hafalan tidak valid.');
   if (!sessionDate || !surah || juz < 1 || juz > 30) {
     throw new Error('Data setoran belum lengkap.');
   }
 
-  await sql`
-    insert into memorization_sessions (
-      organization_id,student_id,teacher_id,session_date,session_type,juz_no,surah_name,start_ayah,end_ayah,pages,
-      fluency,tajwid,makhraj,accuracy,murajaah_score,status,mistakes_count,notes,created_by_auth_user_id
-    ) values (
-      ${profile.organization_id},
-      ${studentId},
-      ${student[0].teacher_id || null},
-      ${sessionDate},
-      ${sessionType},
-      ${juz},
-      ${surah},
-      ${startAyah},
-      ${endAyah},
-      ${pages},
-      ${fluency},
-      ${tajwid},
-      ${makhraj},
-      ${accuracy},
-      ${murajaahScore},
-      ${status},
-      ${mistakes},
-      ${notes || null},
-      'pin-admin'
-    )
-  `;
-
-  await sql`
-    insert into audit_events (organization_id,actor_auth_user_id,action,entity_type,entity_id,metadata)
-    values (
-      ${profile.organization_id},
-      'pin-admin',
-      'create_memorization_session',
-      'student',
-      ${studentId},
-      jsonb_build_object('surah',${surah},'type',${sessionType})
-    )
-  `;
+  await adminMutate(token, 'save_setoran', {
+    student_id: studentId,
+    session_date: sessionDate,
+    session_type: sessionType,
+    juz_no: juz,
+    surah_name: surah,
+    start_ayah: startAyah,
+    end_ayah: endAyah,
+    pages,
+    fluency: score(formData,'fluency'),
+    tajwid: score(formData,'tajwid'),
+    makhraj: score(formData,'makhraj'),
+    accuracy: score(formData,'accuracy'),
+    murajaah_score: murajaahScoreRaw ? score(formData,'murajaah_score') : '',
+    status,
+    mistakes_count: mistakes,
+    notes,
+  });
 
   redirect(`/students/${studentId}?saved=1`);
 }
