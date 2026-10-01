@@ -1,73 +1,24 @@
 import Link from 'next/link';
 import { AppShell } from '@/components/app-shell';
 import { getCurrentProfile } from '@/lib/current-user';
-import { sql } from '@/lib/db';
+import { getAdminToken } from '@/lib/admin-session';
+import { getDashboardData } from '@/lib/neon-api';
 import { ArrowUpRight, BookOpen, Clock3, Sparkles, Users, AlertCircle, ChevronRight } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
 export default async function DashboardPage() {
   const { profile } = await getCurrentProfile();
-  const orgId = profile.organization_id;
+  const token = await getAdminToken();
+  if (!token) throw new Error('Admin session is required');
 
-  const [summary, focus, recent, groups] = await Promise.all([
-    sql`
-      with last_sessions as (
-        select distinct on (student_id) student_id, session_date, overall_score, status
-        from memorization_sessions where organization_id=${orgId}
-        order by student_id, session_date desc, created_at desc
-      )
-      select
-        (select count(*) from students where organization_id=${orgId} and status='active')::int as students,
-        (select count(*) from memorization_sessions where organization_id=${orgId} and date_trunc('month',session_date)=date_trunc('month',current_date))::int as sessions_month,
-        coalesce((select round(avg(overall_score),1) from memorization_sessions where organization_id=${orgId} and session_date >= current_date-30),0) as avg_score,
-        (select count(*) from students s left join last_sessions l on l.student_id=s.id
-         where s.organization_id=${orgId} and s.status='active'
-           and (l.session_date is null or l.session_date < current_date-7 or l.overall_score<80))::int as need_attention
-    `,
-    sql`
-      with last_sessions as (
-        select distinct on (student_id) student_id, session_date, overall_score, status, surah_name
-        from memorization_sessions where organization_id=${orgId}
-        order by student_id, session_date desc, created_at desc
-      )
-      select s.id,s.full_name,g.name as group_name,l.session_date,l.overall_score,l.status,l.surah_name,
-        case
-          when l.session_date is null then 'Belum ada setoran'
-          when l.session_date < current_date-7 then (current_date-l.session_date)::text || ' hari belum setor'
-          when l.overall_score < 80 then 'Nilai terakhir perlu perhatian'
-          when l.status='perlu_murajaah' then 'Perlu penguatan murajaah'
-          else 'Pantau target bulan ini'
-        end as reason
-      from students s
-      left join tahfidz_groups g on g.id=s.tahfidz_group_id
-      left join last_sessions l on l.student_id=s.id
-      where s.organization_id=${orgId} and s.status='active'
-        and (l.session_date is null or l.session_date < current_date-7 or l.overall_score<80 or l.status='perlu_murajaah')
-      order by coalesce(l.session_date,'1900-01-01'::date) asc
-      limit 5
-    `,
-    sql`
-      select ms.id,ms.session_date,ms.session_type,ms.surah_name,ms.overall_score,
-             s.id as student_id,s.full_name
-      from memorization_sessions ms
-      join students s on s.id=ms.student_id
-      where ms.organization_id=${orgId}
-      order by ms.session_date desc, ms.created_at desc
-      limit 6
-    `,
-    sql`
-      select g.id,g.name,g.target_label,t.full_name as teacher_name,count(s.id)::int as student_count
-      from tahfidz_groups g
-      left join teachers t on t.id=g.teacher_id
-      left join students s on s.tahfidz_group_id=g.id and s.status='active'
-      where g.organization_id=${orgId}
-      group by g.id,t.full_name
-      order by g.name
-    `
-  ]);
+  const dashboard = await getDashboardData(token);
+  const summary = dashboard.summary;
+  const focus = dashboard.focus || [];
+  const recent = dashboard.recent || [];
+  const groups = dashboard.groups || [];
 
-  const s:any = summary[0];
+  const s:any = summary;
 
   return (
     <AppShell userName={profile.full_name} role={profile.role} institution={profile.institution_name}>
