@@ -1,8 +1,6 @@
 import { AppShell } from '@/components/app-shell';
 import { SubmitButton } from '@/components/submit-button';
-import { getCurrentProfile } from '@/lib/current-user';
-import { getAdminToken } from '@/lib/admin-session';
-import { getSetoranFormData } from '@/lib/neon-api';
+import { getPageData } from '@/lib/page-data';
 import { saveSetoranAction } from './actions';
 import {
   BookOpenCheck,
@@ -20,11 +18,8 @@ export default async function SetoranPage({
 }: {
   searchParams: Promise<{student?:string}>;
 }) {
-  const { profile } = await getCurrentProfile();
   const { student: selected='' } = await searchParams;
-  const token = await getAdminToken();
-  if (!token) throw new Error('Admin session is required');
-  const students = await getSetoranFormData(token);
+  const { profile, data: students } = await getPageData<any[]>('setoran');
 
   const today = new Date().toISOString().slice(0,10);
 
