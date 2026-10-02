@@ -156,6 +156,7 @@ export default async function ManagePage(){
                     </span>
                     <Link
                       href={`/manage/students/${s.id}`}
+                      prefetch={false}
                       className="h-10 w-10 rounded-[13px] border border-[#12372A]/[.10] bg-white grid place-items-center text-[#415049] hover:border-[#12372A]/[.22] transition"
                       aria-label={`Edit ${s.full_name}`}
                     >
