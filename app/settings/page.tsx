@@ -81,7 +81,7 @@ function StatusBox({icon:Icon,title,value,body}:any){
     <div className="metric-card">
       <div className="flex items-center justify-between gap-3">
         <span className="gold-kicker">{title}</span>
-        <div className="h-9 w-9 rounded-[12px] bg-[#edf2ee] text-[#456455] grid place-items-center">
+        <div className="h-9 w-9 rounded-[12px] bg-[#E8F9FD] text-[#1C4C6E] grid place-items-center">
           <Icon size={17}/>
         </div>
       </div>
