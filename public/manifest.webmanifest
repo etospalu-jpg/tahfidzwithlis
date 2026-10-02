@@ -1,12 +1,12 @@
 {
-  "name": "TahfidzWithLis",
-  "short_name": "Tahfidz",
-  "description": "Monitoring hafalan, setoran, murajaah, dan perkembangan siswa.",
+  "name": "TahfidzWithLis · Bina Insan Palu",
+  "short_name": "TahfidzWithLis",
+  "description": "Monitoring hafalan, setoran, murajaah, dan perkembangan siswa SD Islam Terpadu Bina Insan Palu.",
   "start_url": "/dashboard",
   "display": "standalone",
-  "background_color": "#F5F3EC",
-  "theme_color": "#12372A",
+  "background_color": "#FFFFFF",
+  "theme_color": "#1C4C6E",
   "icons": [
-    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+    { "src": "/bina-insan-logo.jpg", "sizes": "320x320", "type": "image/jpeg", "purpose": "any maskable" }
   ]
 }
