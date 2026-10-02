@@ -1,138 +1,75 @@
 'use client';
+import Image from 'next/image';
+import {useActionState} from 'react';
+import {ArrowRight,KeyRound,ShieldCheck,BookOpenCheck,Users,ChartNoAxesCombined} from 'lucide-react';
+import {signInAction} from './actions';
 
-import { useActionState } from 'react';
-import {
-  BookOpenCheck,
-  ArrowRight,
-  ShieldCheck,
-  KeyRound,
-  Database,
-  Sparkles,
-} from 'lucide-react';
-import { signInAction } from './actions';
-
-export default function SignInPage() {
-  const [state, action, pending] = useActionState(signInAction, null);
-
-  return (
-    <main className="min-h-screen grid lg:grid-cols-[1.08fr_.92fr] bg-[#f5f3ec]">
-      <section className="hidden lg:flex m-4 rounded-[30px] p-10 xl:p-14 bg-[#12372A] text-white relative overflow-hidden shadow-[0_26px_80px_rgba(18,55,42,.22)]">
-        <div
-          className="absolute inset-0 opacity-25"
-          style={{background:'radial-gradient(circle at 18% 8%, #B69A62 0, transparent 26%), radial-gradient(circle at 88% 92%, #2f6954 0, transparent 34%)'}}
-        />
-
-        <div className="relative z-10 max-w-xl flex flex-col justify-between">
-          <div className="flex items-center gap-3">
-            <div className="h-12 w-12 rounded-[16px] bg-white/[.10] border border-white/[.13] grid place-items-center">
-              <BookOpenCheck size={24}/>
-            </div>
-            <div>
-              <div className="font-extrabold text-lg tracking-[-.025em]">TahfidzWithLis</div>
-              <div className="text-[11px] text-white/48">Qur'an Learning Intelligence System</div>
-            </div>
-          </div>
-
-          <div className="py-12 xl:py-16">
-            <span className="text-[#d8c29a] text-[10px] font-black tracking-[.18em] uppercase">
-              Modern Tahfidz Workspace
-            </span>
-            <h1 className="text-5xl xl:text-[64px] font-semibold leading-[1.01] tracking-[-.052em] mt-5">
-              Hafalan lebih mudah <span className="text-[#d8c29a]">dipantau dan dibimbing.</span>
-            </h1>
-            <p className="mt-7 text-base xl:text-lg leading-8 text-white/62 max-w-lg">
-              Siswa, setoran, murajaah, target, laporan, dan catatan perkembangan tersusun dalam satu workspace yang tenang.
-            </p>
-
-            <div className="grid grid-cols-2 gap-3 mt-8 max-w-lg">
-              <Feature icon={Database} text="Neon cloud database"/>
-              <Feature icon={ShieldCheck} text="Session admin aman"/>
-              <Feature icon={Sparkles} text="Monitoring progres"/>
-              <Feature icon={BookOpenCheck} text="Setoran terstruktur"/>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3 text-xs text-white/48">
-            <ShieldCheck size={17} className="text-[#d8c29a]"/>
-            Akses administrator dilindungi session server-side.
-          </div>
-        </div>
-      </section>
-
-      <section className="min-h-screen flex items-center justify-center px-5 py-8 sm:p-10">
-        <div className="w-full max-w-[420px] fade-up">
-          <div className="lg:hidden flex items-center gap-3 mb-10">
-            <div className="h-12 w-12 rounded-[16px] bg-[#12372A] text-white grid place-items-center shadow-[0_10px_26px_rgba(18,55,42,.17)]">
-              <BookOpenCheck size={23}/>
-            </div>
-            <div>
-              <div className="font-extrabold text-base tracking-[-.025em]">TahfidzWithLis</div>
-              <div className="text-[11px] muted">Monitoring tahfidz modern</div>
-            </div>
-          </div>
-
-          <div className="icon-box icon-box-gold mb-6">
-            <KeyRound size={20}/>
-          </div>
-
-          <span className="gold-kicker">Akses administrator</span>
-          <h2 className="text-[38px] sm:text-[44px] leading-none font-semibold tracking-[-.045em] mt-3">
-            Masukkan PIN.
-          </h2>
-          <p className="page-subtitle !mt-3">
-            Masuk ke workspace untuk mengelola siswa, setoran, target, dan laporan program.
-          </p>
-
-          <form action={action} className="mt-7 space-y-4">
-            <div>
-              <label className="label" htmlFor="pin">PIN Admin</label>
-              <input
-                className="field min-h-[54px] text-center text-xl tracking-[.38em] font-extrabold"
-                id="pin"
-                name="pin"
-                type="password"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                maxLength={6}
-                autoComplete="off"
-                placeholder="••••••"
-                required
-                autoFocus
-              />
-            </div>
-
-            {state?.error && (
-              <div className="rounded-[14px] bg-red-50 border border-red-100 px-4 py-3 text-sm text-red-700">
-                {state.error}
-              </div>
-            )}
-
-            <button className="btn-primary w-full min-h-[50px]" disabled={pending}>
-              {pending ? (
-                'Memverifikasi…'
-              ) : (
-                <>
-                  Masuk Dashboard
-                  <ArrowRight size={18}/>
-                </>
-              )}
-            </button>
-          </form>
-
-          <div className="mt-6 rounded-[16px] border border-[#12372A]/[.08] bg-white/60 px-4 py-3 text-[11px] muted leading-5">
-            PIN dapat diganti kapan saja dari menu <strong className="text-[#46534c]">Pengaturan</strong> setelah masuk.
-          </div>
-        </div>
-      </section>
-    </main>
-  );
-}
-
-function Feature({icon:Icon,text}:any){
-  return (
-    <div className="rounded-[16px] border border-white/[.08] bg-white/[.045] p-3.5 flex items-center gap-3">
-      <Icon size={17} className="text-[#d8c29a] shrink-0"/>
-      <span className="text-xs font-bold text-white/70">{text}</span>
+export default function SignInPage(){
+ const [state,action,pending]=useActionState(signInAction,null);
+ return (
+  <main className="min-h-screen bg-white grid lg:grid-cols-[1.02fr_.98fr]">
+   <section className="hidden lg:flex min-h-screen border-r border-[#e3ebf0] bg-[#f8fbfd] p-10 xl:p-14">
+    <div className="w-full max-w-[620px] mx-auto flex flex-col justify-between">
+     <div className="flex items-center gap-4">
+      <div className="brand-mark h-20 w-20 rounded-[20px] border border-[#dfe9ef] p-2 shadow-[0_8px_24px_rgba(28,76,110,.06)]">
+       <Image src="/bina-insan-logo.jpg" alt="SD Islam Terpadu Bina Insan Palu" width={160} height={160} className="brand-logo" priority/>
+      </div>
+      <div>
+       <div className="text-[11px] font-black tracking-[.16em] uppercase text-[#08a8cb]">SD Islam Terpadu</div>
+       <div className="text-2xl font-black tracking-[-.035em] text-[#153b57]">Bina Insan Palu</div>
+      </div>
+     </div>
+     <div className="py-12">
+      <span className="text-[#1c4c6e] text-[10px] font-black tracking-[.18em] uppercase">Tahfidz Intelligence Workspace</span>
+      <h1 className="text-5xl xl:text-[64px] font-bold leading-[1.01] tracking-[-.055em] mt-5 text-[#153b57]">
+       Hafalan lebih mudah <span className="text-[#08b9df]">dipantau dan dibimbing.</span>
+      </h1>
+      <p className="mt-7 text-base xl:text-lg leading-8 text-[#607687] max-w-lg">
+       Siswa, setoran, murajaah, target, laporan, dan catatan perkembangan dalam satu aplikasi yang ringan dan terstruktur.
+      </p>
+      <div className="grid grid-cols-3 gap-3 mt-8 max-w-lg">
+       <Feature icon={BookOpenCheck} label="Setoran"/><Feature icon={Users} label="Siswa"/><Feature icon={ChartNoAxesCombined} label="Laporan"/>
+      </div>
+     </div>
+     <div className="flex items-center gap-2 text-xs text-[#718392]"><ShieldCheck size={17} className="text-[#1c4c6e]"/>Akses administrator terlindungi session server-side.</div>
     </div>
-  );
+   </section>
+
+   <section className="min-h-screen flex items-center justify-center p-5 sm:p-8">
+    <div className="w-full max-w-[430px]">
+     <div className="lg:hidden text-center mb-8">
+      <div className="brand-mark h-28 w-28 rounded-[24px] border border-[#e3ebf0] p-2 mx-auto shadow-[0_10px_30px_rgba(28,76,110,.06)]">
+       <Image src="/bina-insan-logo.jpg" alt="SD Islam Terpadu Bina Insan Palu" width={220} height={220} className="brand-logo" priority/>
+      </div>
+      <div className="mt-4 text-[10px] font-black tracking-[.16em] uppercase text-[#08a8cb]">SD Islam Terpadu</div>
+      <div className="text-xl font-black tracking-[-.03em] text-[#153b57]">Bina Insan Palu</div>
+     </div>
+
+     <div className="mb-7">
+      <span className="text-[#1c4c6e] text-[10px] font-black tracking-[.16em] uppercase">TahfidzWithLis</span>
+      <h2 className="text-[38px] sm:text-[44px] font-bold tracking-[-.05em] leading-[1.04] text-[#153b57] mt-2">Masuk ke workspace.</h2>
+      <p className="text-sm leading-6 text-[#718392] mt-3">Masukkan PIN administrator untuk melanjutkan.</p>
+     </div>
+
+     <form action={action} className="space-y-4">
+      <div>
+       <label className="label">PIN Administrator</label>
+       <div className="relative">
+        <KeyRound size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#718392]"/>
+        <input name="pin" type="password" inputMode="numeric" autoComplete="current-password" autoFocus className="field !h-14 !pl-12 !text-lg tracking-[.22em]" placeholder="••••••••" required/>
+       </div>
+      </div>
+      {state?.error&&<div className="rounded-[13px] border border-[#f2d7c5] bg-[#fff7f1] px-4 py-3 text-sm font-semibold text-[#a45c16]">{state.error}</div>}
+      <button disabled={pending} className="btn-primary !h-14 !w-full !rounded-[14px] !text-sm">
+       {pending?'Memverifikasi...':'Masuk'}<ArrowRight size={18}/>
+      </button>
+     </form>
+     <p className="text-center text-[11px] text-[#8a9aa6] mt-6">TahfidzWithLis · SD Islam Terpadu Bina Insan Palu</p>
+    </div>
+   </section>
+  </main>
+ );
+}
+function Feature({icon:Icon,label}:any){
+ return <div className="rounded-[16px] border border-[#e3ebf0] bg-white p-4"><div className="h-9 w-9 rounded-[11px] bg-[#e8f9fd] text-[#1c4c6e] grid place-items-center"><Icon size={17}/></div><div className="text-xs font-extrabold text-[#38566b] mt-3">{label}</div></div>;
 }
