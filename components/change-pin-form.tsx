@@ -36,7 +36,7 @@ export function ChangePinForm() {
       )}
 
       {state?.success && (
-        <div className="mt-4 flex items-center gap-2 rounded-[14px] border border-[#12372A]/10 bg-[#edf3ef] px-4 py-3 text-sm font-bold text-[#1b4a39]">
+        <div className="mt-4 flex items-center gap-2 rounded-[14px] border border-[#1C4C6E]/10 bg-[#E8F9FD] px-4 py-3 text-sm font-bold text-[#1C4C6E]">
           <ShieldCheck size={17}/>
           {state.success}
         </div>
