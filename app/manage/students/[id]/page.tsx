@@ -82,7 +82,7 @@ export default async function EditStudentPage({params}:{params:Promise<{id:strin
               <div>
                 <label className="label">Kelas</label>
                 <div className="relative">
-                  <School size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#738078] pointer-events-none"/>
+                  <School size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#718392] pointer-events-none"/>
                   <select className="field !pl-10" name="class_id" defaultValue={s.class_id || ''}>
                     <option value="">Belum ditentukan</option>
                     {classes.map((c:any)=><option key={c.id} value={c.id}>{c.name}</option>)}
@@ -93,7 +93,7 @@ export default async function EditStudentPage({params}:{params:Promise<{id:strin
               <div>
                 <label className="label">Halaqah</label>
                 <div className="relative">
-                  <Layers3 size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#738078] pointer-events-none"/>
+                  <Layers3 size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#718392] pointer-events-none"/>
                   <select className="field !pl-10" name="tahfidz_group_id" defaultValue={s.tahfidz_group_id || ''}>
                     <option value="">Belum ditentukan</option>
                     {groups.map((g:any)=><option key={g.id} value={g.id}>{g.name}</option>)}
@@ -132,7 +132,7 @@ export default async function EditStudentPage({params}:{params:Promise<{id:strin
                 <Field label="Email orang tua" name="parent_email" type="email" defaultValue={s.parent_email || ''}/>
               </div>
 
-              <div className="mt-5 border-t border-[#12372A]/[.08] pt-4">
+              <div className="mt-5 border-t border-[#e3ebf0] pt-4">
                 <p className="text-[11px] muted leading-5 mb-4">
                   Perubahan akan langsung memengaruhi dashboard, halaqah, dan laporan siswa.
                 </p>
