@@ -1,5 +1,5 @@
-const CACHE='tahfidzwithlis-static-v2';
-const CORE=['/manifest.webmanifest','/icon.svg'];
+const CACHE='tahfidzwithlis-static-v3-bina-insan';
+const CORE=['/manifest.webmanifest','/bina-insan-logo.jpg','/icon.svg'];
 
 self.addEventListener('install', event => {
   self.skipWaiting();
@@ -7,36 +7,26 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('activate', event => {
-  event.waitUntil(
-    Promise.all([
-      self.clients.claim(),
-      caches.keys().then(keys =>
-        Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key)))
-      ),
-    ])
-  );
+  event.waitUntil(Promise.all([
+    self.clients.claim(),
+    caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key)))),
+  ]));
 });
 
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
-
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
-
   const isStatic =
     url.pathname === '/icon.svg' ||
+    url.pathname === '/bina-insan-logo.jpg' ||
     url.pathname === '/manifest.webmanifest' ||
     url.pathname.startsWith('/_next/static/');
-
   if (!isStatic) return;
-
   event.respondWith(
     caches.match(event.request).then(cached => {
       const network = fetch(event.request).then(response => {
-        if (response.ok) {
-          const copy = response.clone();
-          caches.open(CACHE).then(cache => cache.put(event.request, copy));
-        }
+        if (response.ok) caches.open(CACHE).then(cache => cache.put(event.request, response.clone()));
         return response;
       });
       return cached || network;
