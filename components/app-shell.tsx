@@ -75,7 +75,7 @@ export function AppShell({children,userName,role,institution}:Props){
         <div className="page-shell px-4 sm:px-6 lg:px-6">{children}</div>
       </main>
 
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-[#e3ebf0] bg-white/96 backdrop-blur-xl pb-[env(safe-area-inset-bottom)]">
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-[#e3ebf0] bg-white/[.96] backdrop-blur-xl pb-[env(safe-area-inset-bottom)]">
         <MobileAppNav/>
       </nav>
     </div>
