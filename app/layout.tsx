@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: 'Platform monitoring tahfidz modern untuk guru, koordinator, dan lembaga.',
   applicationName: 'TahfidzWithLis',
   manifest: '/manifest.webmanifest',
-  icons: { icon: '/icon.svg', apple: '/icon.svg' },
+  icons: { icon: '/bina-insan-logo.jpg', apple: '/bina-insan-logo.jpg' },
 };
 
 export const viewport: Viewport = {
