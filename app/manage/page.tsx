@@ -157,7 +157,7 @@ export default async function ManagePage(){
                     <Link
                       href={`/manage/students/${s.id}`}
                       prefetch={false}
-                      className="h-10 w-10 rounded-[13px] border border-[#12372A]/[.10] bg-white grid place-items-center text-[#415049] hover:border-[#12372A]/[.22] transition"
+                      className="h-10 w-10 rounded-[13px] border border-[#1C4C6E]/[.10] bg-white grid place-items-center text-[#38566B] hover:border-[#1C4C6E]/[.22] transition"
                       aria-label={`Edit ${s.full_name}`}
                     >
                       <Pencil size={17}/>
@@ -223,7 +223,7 @@ function Overview({icon:Icon,label,value}:any){
     <div className="metric-card">
       <div className="flex items-center justify-between gap-3">
         <span className="gold-kicker">{label}</span>
-        <div className="h-9 w-9 rounded-[12px] bg-[#edf2ee] text-[#456455] grid place-items-center">
+        <div className="h-9 w-9 rounded-[12px] bg-[#E8F9FD] text-[#1C4C6E] grid place-items-center">
           <Icon size={17}/>
         </div>
       </div>
@@ -244,7 +244,7 @@ function CreatePanel({icon:Icon,kicker,title,subtitle,children}:any){
         </div>
         <ChevronDown size={19} className="muted transition-transform group-open:rotate-180"/>
       </summary>
-      <div className="border-t border-[#12372A]/[.08] p-5 sm:p-6 pt-5">
+      <div className="border-t border-[#e3ebf0] p-5 sm:p-6 pt-5">
         {children}
       </div>
     </details>
