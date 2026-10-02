@@ -74,7 +74,7 @@ export default async function StudentsPage({
                     <Layers3 size={13}/>
                     {s.class_name || 'Tanpa kelas'}
                   </span>
-                  <span className="text-[#aab2ad]">•</span>
+                  <span className="text-[#8A9AA6]">•</span>
                   <span>{s.group_name || 'Tanpa halaqah'}</span>
                 </div>
 
@@ -100,7 +100,7 @@ export default async function StudentsPage({
                 </div>
               </div>
 
-              <div className="h-9 w-9 rounded-[12px] bg-white border border-[#12372A]/[.08] grid place-items-center text-[#6d7972]">
+              <div className="h-9 w-9 rounded-[12px] bg-white border border-[#e3ebf0] grid place-items-center text-[#718392]">
                 <ChevronRight size={18}/>
               </div>
             </Link>
