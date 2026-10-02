@@ -73,7 +73,7 @@ export default async function DashboardPage() {
                   key={item.id}
                   href={`/students/${item.id}`}
                   prefetch={false}
-                  className="data-row rounded-[14px] px-2 -mx-2 hover:bg-[#1C4C6E]/[.035] transition"
+                  className="data-row rounded-[14px] px-2 -mx-2 hover:bg-[#f8fbfd] transition"
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <div className="student-avatar shrink-0">{initials(item.full_name)}</div>
@@ -92,26 +92,26 @@ export default async function DashboardPage() {
             </div>
           </div>
 
-          <div className="shell-card p-5 sm:p-6 bg-[#1C4C6E] !text-white shadow-[0_18px_45px_rgba(18,55,42,.15)]">
+          <div className="shell-card p-5 sm:p-6">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <span className="text-[#E4B30B] text-[10px] font-black tracking-[.15em] uppercase">Halaqah</span>
-                <h2 className="text-[22px] font-semibold tracking-[-.03em] mt-1">Kelompok aktif</h2>
+                <span className="text-[#08a8cb] text-[10px] font-black tracking-[.15em] uppercase">Halaqah</span>
+                <h2 className="text-[22px] font-bold text-[#153B57] tracking-[-.03em] mt-1">Kelompok aktif</h2>
               </div>
-              <div className="h-10 w-10 rounded-[13px] bg-white/[.08] grid place-items-center text-[#E4B30B]">
+              <div className="h-10 w-10 rounded-[13px] bg-[#E8F9FD] grid place-items-center text-[#1C4C6E]">
                 <Layers3 size={19}/>
               </div>
             </div>
 
             <div className="mt-5 space-y-3">
               {groups.map((g:any) => (
-                <div key={g.id} className="rounded-[17px] border border-white/[.09] bg-white/[.055] p-4">
+                <div key={g.id} className="rounded-[17px] border border-[#e3ebf0] bg-[#f8fbfd] p-4">
                   <div className="flex items-center justify-between gap-3">
                     <div className="font-extrabold truncate">{g.name}</div>
-                    <span className="text-[11px] text-[#E4B30B] font-extrabold whitespace-nowrap">{g.student_count} siswa</span>
+                    <span className="text-[11px] text-[#1C4C6E] font-extrabold whitespace-nowrap">{g.student_count} siswa</span>
                   </div>
-                  <div className="text-[11px] text-white/48 mt-2 truncate">{g.teacher_name || 'Belum ada guru'}</div>
-                  <div className="text-[11px] text-white/68 mt-1 truncate">{g.target_label || 'Belum ada target'}</div>
+                  <div className="text-[11px] text-[#718392] mt-2 truncate">{g.teacher_name || 'Belum ada guru'}</div>
+                  <div className="text-[11px] text-[#607687] mt-1 truncate">{g.target_label || 'Belum ada target'}</div>
                 </div>
               ))}
             </div>
@@ -136,7 +136,7 @@ export default async function DashboardPage() {
                 href={`/students/${r.student_id}`}
                 prefetch={false}
                 key={r.id}
-                className="soft-card p-4 hover:bg-white hover:border-[#1C4C6E]/[.15] transition"
+                className="soft-card p-4 hover:bg-white hover:border-[#b9d0dc] transition"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="font-extrabold truncate">{r.full_name}</div>
@@ -158,7 +158,7 @@ export default async function DashboardPage() {
 
 function Metric({icon:Icon,label,value,note,accent=false}:any){
   return (
-    <div className={"metric-card " + (accent ? "bg-[#FFF8D9]" : "")}>
+    <div className="metric-card">
       <div className="flex items-center justify-between gap-3">
         <span className="gold-kicker">{label}</span>
         <div className={"h-9 w-9 rounded-[12px] grid place-items-center " + (accent ? "bg-[#FFF4E8] text-[#9b4f22]" : "bg-[#E8F9FD] text-[#1C4C6E]")}>
