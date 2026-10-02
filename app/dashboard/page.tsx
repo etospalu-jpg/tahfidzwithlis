@@ -72,6 +72,7 @@ export default async function DashboardPage() {
                 <Link
                   key={item.id}
                   href={`/students/${item.id}`}
+                  prefetch={false}
                   className="data-row rounded-[14px] px-2 -mx-2 hover:bg-[#12372A]/[.035] transition"
                 >
                   <div className="flex items-center gap-3 min-w-0">
@@ -133,6 +134,7 @@ export default async function DashboardPage() {
             {recent.map((r:any) => (
               <Link
                 href={`/students/${r.student_id}`}
+                prefetch={false}
                 key={r.id}
                 className="soft-card p-4 hover:bg-white hover:border-[#12372A]/[.15] transition"
               >
