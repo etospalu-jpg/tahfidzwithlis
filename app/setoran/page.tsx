@@ -53,7 +53,7 @@ export default async function SetoranPage({
               <div className="sm:col-span-2">
                 <label className="label">Siswa</label>
                 <div className="relative">
-                  <UserRound size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#738078] pointer-events-none"/>
+                  <UserRound size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#718392] pointer-events-none"/>
                   <select className="field !pl-10" name="student_id" defaultValue={selected} required>
                     <option value="">Pilih siswa</option>
                     {students.map((s:any)=>(
@@ -68,7 +68,7 @@ export default async function SetoranPage({
               <div>
                 <label className="label">Tanggal</label>
                 <div className="relative">
-                  <CalendarDays size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#738078] pointer-events-none"/>
+                  <CalendarDays size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#718392] pointer-events-none"/>
                   <input className="field !pl-10" type="date" name="session_date" defaultValue={today} required/>
                 </div>
               </div>
@@ -172,7 +172,7 @@ export default async function SetoranPage({
                 placeholder="Contoh: Perkuat sambungan ayat 18–20 sebelum menambah hafalan berikutnya."
               />
 
-              <div className="mt-4 border-t border-[#12372A]/[.08] pt-4">
+              <div className="mt-4 border-t border-[#e3ebf0] pt-4">
                 <SubmitButton/>
               </div>
             </section>
