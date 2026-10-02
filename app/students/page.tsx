@@ -59,7 +59,7 @@ export default async function StudentsPage({
 
         <div className="list-surface mt-5">
           {students.map((s:any) => (
-            <Link key={s.id} href={`/students/${s.id}`} className="student-row">
+            <Link key={s.id} href={`/students/${s.id}`} prefetch={false} className="student-row">
               <div className="student-avatar">
                 {initials(s.full_name)}
               </div>
