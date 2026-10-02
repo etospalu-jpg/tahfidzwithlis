@@ -29,7 +29,7 @@ export default async function DashboardPage() {
           <div className="page-header-copy">
             <span className="gold-kicker">Workspace hari ini</span>
             <h1 className="page-title">
-              Assalamu’alaikum, <span className="text-[#68766e]">Administrator.</span>
+              Assalamu’alaikum, <span className="text-[#718392]">Administrator.</span>
             </h1>
             <p className="page-subtitle">
               Pantau kondisi hafalan, tentukan siswa yang perlu perhatian, lalu catat setoran tanpa kehilangan konteks perkembangan.
@@ -73,7 +73,7 @@ export default async function DashboardPage() {
                   key={item.id}
                   href={`/students/${item.id}`}
                   prefetch={false}
-                  className="data-row rounded-[14px] px-2 -mx-2 hover:bg-[#12372A]/[.035] transition"
+                  className="data-row rounded-[14px] px-2 -mx-2 hover:bg-[#1C4C6E]/[.035] transition"
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <div className="student-avatar shrink-0">{initials(item.full_name)}</div>
@@ -84,7 +84,7 @@ export default async function DashboardPage() {
                       </div>
                     </div>
                   </div>
-                  <div className="h-9 w-9 rounded-[12px] bg-white border border-[#12372A]/[.08] grid place-items-center text-[#6d7972]">
+                  <div className="h-9 w-9 rounded-[12px] bg-white border border-[#e3ebf0] grid place-items-center text-[#718392]">
                     <ChevronRight size={18}/>
                   </div>
                 </Link>
@@ -92,13 +92,13 @@ export default async function DashboardPage() {
             </div>
           </div>
 
-          <div className="shell-card p-5 sm:p-6 bg-[#12372A] !text-white shadow-[0_18px_45px_rgba(18,55,42,.15)]">
+          <div className="shell-card p-5 sm:p-6 bg-[#1C4C6E] !text-white shadow-[0_18px_45px_rgba(18,55,42,.15)]">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <span className="text-[#d8c29a] text-[10px] font-black tracking-[.15em] uppercase">Halaqah</span>
+                <span className="text-[#E4B30B] text-[10px] font-black tracking-[.15em] uppercase">Halaqah</span>
                 <h2 className="text-[22px] font-semibold tracking-[-.03em] mt-1">Kelompok aktif</h2>
               </div>
-              <div className="h-10 w-10 rounded-[13px] bg-white/[.08] grid place-items-center text-[#d8c29a]">
+              <div className="h-10 w-10 rounded-[13px] bg-white/[.08] grid place-items-center text-[#E4B30B]">
                 <Layers3 size={19}/>
               </div>
             </div>
@@ -108,7 +108,7 @@ export default async function DashboardPage() {
                 <div key={g.id} className="rounded-[17px] border border-white/[.09] bg-white/[.055] p-4">
                   <div className="flex items-center justify-between gap-3">
                     <div className="font-extrabold truncate">{g.name}</div>
-                    <span className="text-[11px] text-[#d8c29a] font-extrabold whitespace-nowrap">{g.student_count} siswa</span>
+                    <span className="text-[11px] text-[#E4B30B] font-extrabold whitespace-nowrap">{g.student_count} siswa</span>
                   </div>
                   <div className="text-[11px] text-white/48 mt-2 truncate">{g.teacher_name || 'Belum ada guru'}</div>
                   <div className="text-[11px] text-white/68 mt-1 truncate">{g.target_label || 'Belum ada target'}</div>
@@ -136,7 +136,7 @@ export default async function DashboardPage() {
                 href={`/students/${r.student_id}`}
                 prefetch={false}
                 key={r.id}
-                className="soft-card p-4 hover:bg-white hover:border-[#12372A]/[.15] transition"
+                className="soft-card p-4 hover:bg-white hover:border-[#1C4C6E]/[.15] transition"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="font-extrabold truncate">{r.full_name}</div>
@@ -158,10 +158,10 @@ export default async function DashboardPage() {
 
 function Metric({icon:Icon,label,value,note,accent=false}:any){
   return (
-    <div className={"metric-card " + (accent ? "bg-[#fff8ef]" : "")}>
+    <div className={"metric-card " + (accent ? "bg-[#FFF8D9]" : "")}>
       <div className="flex items-center justify-between gap-3">
         <span className="gold-kicker">{label}</span>
-        <div className={"h-9 w-9 rounded-[12px] grid place-items-center " + (accent ? "bg-[#fff0e5] text-[#9b4f22]" : "bg-[#edf2ee] text-[#456455]")}>
+        <div className={"h-9 w-9 rounded-[12px] grid place-items-center " + (accent ? "bg-[#FFF4E8] text-[#9b4f22]" : "bg-[#E8F9FD] text-[#1C4C6E]")}>
           <Icon size={17}/>
         </div>
       </div>
