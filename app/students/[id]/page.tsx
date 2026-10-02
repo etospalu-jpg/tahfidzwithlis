@@ -48,7 +48,7 @@ export default async function StudentDetailPage({ params }: { params: Promise<{i
 
         <section className="shell-card mt-3 p-5 sm:p-7">
           <div className="flex flex-col lg:flex-row lg:items-center gap-5">
-            <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-[22px] bg-[#12372A] text-white grid place-items-center text-xl sm:text-2xl font-black shrink-0">
+            <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-[22px] bg-[#1C4C6E] text-white grid place-items-center text-xl sm:text-2xl font-black shrink-0">
               {initials(student.full_name)}
             </div>
 
@@ -95,7 +95,7 @@ export default async function StudentDetailPage({ params }: { params: Promise<{i
           <div className="mt-6">
             <div className="flex items-center justify-between gap-3 text-xs font-extrabold">
               <span>Progres target aktif</span>
-              <span className="text-[#1d4b3b]">{pct}%</span>
+              <span className="text-[#153B57]">{pct}%</span>
             </div>
             <div className="progress-track mt-2.5">
               <div className="progress-fill" style={{width:`${pct}%`}}/>
@@ -124,7 +124,7 @@ export default async function StudentDetailPage({ params }: { params: Promise<{i
                         {formatDate(r.session_date)} · {labelType(r.session_type)} · Ayat {r.start_ayah || '—'}–{r.end_ayah || '—'}
                       </div>
                       {r.notes && (
-                        <p className="text-sm mt-2.5 text-[#4f5c54] leading-6">{r.notes}</p>
+                        <p className="text-sm mt-2.5 text-[#607687] leading-6">{r.notes}</p>
                       )}
                     </div>
                   </div>
